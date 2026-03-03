@@ -7,8 +7,8 @@
 
 ### Database Schema
 
-- [ ] **SCHEMA-01**: Create Specialist table with profile fields (id, organizationId, avatar, firstName, lastName, email, phone, description, isTopMaster, timestamps)
-- [ ] **SCHEMA-02**: Create Schedule table with specialist+location keys (id, organizationId, specialistId, locationId, dayOfWeek, intervals JSON, isDayOff, timestamps)
+- [x] **SCHEMA-01**: Create Specialist table with profile fields (id, organizationId, avatar, firstName, lastName, email, phone, description, isTopMaster, timestamps)
+- [x] **SCHEMA-02**: Create Schedule table with specialist+location keys (id, organizationId, specialistId, locationId, dayOfWeek, intervals JSON, isDayOff, timestamps)
 - [ ] **SCHEMA-03**: Create SpecialistService junction table with organizationId scoping (id, organizationId, specialistId, serviceId, createdAt)
 - [ ] **SCHEMA-04**: Create SpecialistLocation junction table with organizationId scoping (id, organizationId, specialistId, locationId, createdAt)
 - [ ] **SCHEMA-05**: Create ServiceLocation junction table with organizationId scoping (id, organizationId, serviceId, locationId, createdAt)
@@ -107,8 +107,8 @@ Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SCHEMA-01 | Phase 1 | Pending |
-| SCHEMA-02 | Phase 1 | Pending |
+| SCHEMA-01 | Phase 1 | Complete |
+| SCHEMA-02 | Phase 1 | Complete |
 | SCHEMA-03 | Phase 1 | Pending |
 | SCHEMA-04 | Phase 1 | Pending |
 | SCHEMA-05 | Phase 1 | Pending |
