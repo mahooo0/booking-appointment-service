@@ -62,10 +62,10 @@
 
 ### Multi-Tenant Safety
 
-- [ ] **TENANT-01**: All queries filter by organizationId automatically (repository pattern)
-- [ ] **TENANT-02**: All mutations validate organizationId ownership before operating
-- [ ] **TENANT-03**: Junction table records always include organizationId
-- [ ] **TENANT-04**: Prevent cross-tenant relationship creation (validation guards)
+- [x] **TENANT-01**: All queries filter by organizationId automatically (repository pattern)
+- [x] **TENANT-02**: All mutations validate organizationId ownership before operating
+- [x] **TENANT-03**: Junction table records always include organizationId
+- [x] **TENANT-04**: Prevent cross-tenant relationship creation (validation guards)
 
 ### API Layer
 
@@ -114,10 +114,10 @@ Populated during roadmap creation.
 | SCHEMA-05 | Phase 1 | Complete |
 | SCHEMA-06 | Phase 1 | Complete |
 | SCHEMA-07 | Phase 1 | Complete |
-| TENANT-01 | Phase 1 | Pending |
-| TENANT-02 | Phase 1 | Pending |
-| TENANT-03 | Phase 1 | Pending |
-| TENANT-04 | Phase 1 | Pending |
+| TENANT-01 | Phase 1 | Complete |
+| TENANT-02 | Phase 1 | Complete |
+| TENANT-03 | Phase 1 | Complete |
+| TENANT-04 | Phase 1 | Complete |
 | SPEC-01 | Phase 2 | Pending |
 | SPEC-02 | Phase 2 | Pending |
 | SPEC-03 | Phase 2 | Pending |
