@@ -218,6 +218,10 @@ model SpecialistService {
   specialist Specialist @relation(fields: [specialistId], references: [id], onDelete: Cascade, name: "specialistServices")
   service    Service    @relation(fields: [serviceId], references: [id], onDelete: Cascade, name: "specialistServices")
 
+  @@unique([organizationId, specialistId, serviceId])
+  @@index([organizationId, specialistId, serviceId])
+  @@index([organizationId, serviceId, specialistId])
+  @@index([organizationId, specialistId])
   @@map("specialist_services")
 }
 
@@ -231,6 +235,10 @@ model SpecialistLocation {
   specialist Specialist @relation(fields: [specialistId], references: [id], onDelete: Cascade, name: "specialistLocations")
   location   Location   @relation(fields: [locationId], references: [id], onDelete: Cascade, name: "specialistLocations")
 
+  @@unique([organizationId, specialistId, locationId])
+  @@index([organizationId, specialistId, locationId])
+  @@index([organizationId, locationId, specialistId])
+  @@index([organizationId, specialistId])
   @@map("specialist_locations")
 }
 
@@ -244,5 +252,9 @@ model ServiceLocation {
   service  Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade, name: "serviceLocations")
   location Location @relation(fields: [locationId], references: [id], onDelete: Cascade, name: "serviceLocations")
 
+  @@unique([organizationId, serviceId, locationId])
+  @@index([organizationId, serviceId, locationId])
+  @@index([organizationId, locationId, serviceId])
+  @@index([organizationId, serviceId])
   @@map("service_locations")
 }
