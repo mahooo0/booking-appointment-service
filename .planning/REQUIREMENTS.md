@@ -9,11 +9,11 @@
 
 - [x] **SCHEMA-01**: Create Specialist table with profile fields (id, organizationId, avatar, firstName, lastName, email, phone, description, isTopMaster, timestamps)
 - [x] **SCHEMA-02**: Create Schedule table with specialist+location keys (id, organizationId, specialistId, locationId, dayOfWeek, intervals JSON, isDayOff, timestamps)
-- [ ] **SCHEMA-03**: Create SpecialistService junction table with organizationId scoping (id, organizationId, specialistId, serviceId, createdAt)
-- [ ] **SCHEMA-04**: Create SpecialistLocation junction table with organizationId scoping (id, organizationId, specialistId, locationId, createdAt)
-- [ ] **SCHEMA-05**: Create ServiceLocation junction table with organizationId scoping (id, organizationId, serviceId, locationId, createdAt)
-- [ ] **SCHEMA-06**: Add composite indexes on all junction tables: [organizationId, foreignKey1, foreignKey2]
-- [ ] **SCHEMA-07**: Add unique constraints: @@unique([organizationId, entityA, entityB]) on all junction tables
+- [x] **SCHEMA-03**: Create SpecialistService junction table with organizationId scoping (id, organizationId, specialistId, serviceId, createdAt)
+- [x] **SCHEMA-04**: Create SpecialistLocation junction table with organizationId scoping (id, organizationId, specialistId, locationId, createdAt)
+- [x] **SCHEMA-05**: Create ServiceLocation junction table with organizationId scoping (id, organizationId, serviceId, locationId, createdAt)
+- [x] **SCHEMA-06**: Add composite indexes on all junction tables: [organizationId, foreignKey1, foreignKey2]
+- [x] **SCHEMA-07**: Add unique constraints: @@unique([organizationId, entityA, entityB]) on all junction tables
 
 ### Specialist Management
 
@@ -109,11 +109,11 @@ Populated during roadmap creation.
 |-------------|-------|--------|
 | SCHEMA-01 | Phase 1 | Complete |
 | SCHEMA-02 | Phase 1 | Complete |
-| SCHEMA-03 | Phase 1 | Pending |
-| SCHEMA-04 | Phase 1 | Pending |
-| SCHEMA-05 | Phase 1 | Pending |
-| SCHEMA-06 | Phase 1 | Pending |
-| SCHEMA-07 | Phase 1 | Pending |
+| SCHEMA-03 | Phase 1 | Complete |
+| SCHEMA-04 | Phase 1 | Complete |
+| SCHEMA-05 | Phase 1 | Complete |
+| SCHEMA-06 | Phase 1 | Complete |
+| SCHEMA-07 | Phase 1 | Complete |
 | TENANT-01 | Phase 1 | Pending |
 | TENANT-02 | Phase 1 | Pending |
 | TENANT-03 | Phase 1 | Pending |

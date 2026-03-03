@@ -2,20 +2,20 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-last_updated: "2026-03-03T11:06:45.636Z"
+status: completed
+last_updated: "2026-03-03T12:20:55.697Z"
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
-  percent: 33
+  completed_plans: 2
+  percent: 67
 ---
 
 # Project State: Booking Appointment Service
 
 **Last Updated:** 2026-03-03
-**Status:** Phase 1 - Foundation & Schema (Plan 01 complete)
+**Status:** Phase 1 - Foundation & Schema (Plans 01-02 complete)
 
 ## Project Reference
 
@@ -25,21 +25,21 @@ progress:
 A NestJS microservice for managing booking appointments with flexible many-to-many relationships between Specialists (workers), Services (with subservices), Locations (company points), and Schedules. All relationships are explicit and optional—no rigid chains, no automatic bindings.
 
 **Current Focus:**
-Phase 1 (Foundation & Schema) - Plan 01 complete. Core entity models established with tenant isolation.
+Phase 1 (Foundation & Schema) - Plans 01-02 complete. Core entity models and junction tables established with tenant isolation.
 
 ## Current Position
 
 **Active Phase:** 01-foundation-schema
-**Active Plan:** 02 (junction tables - next)
-**Last Completed:** 01-foundation-schema/01-01-PLAN.md
-**Next Action:** Execute Plan 02 (Junction Tables) or continue with Phase 1 plans
+**Active Plan:** 03 (multi-tenant guards - next)
+**Last Completed:** 01-foundation-schema/01-02-PLAN.md
+**Next Action:** Execute Plan 03 (Multi-tenant Guards) to complete Phase 1
 
 **Progress:**
 ```
-[███░░░░░░░] 33% complete
-Phase 1: Foundation & Schema - 1/3 plans complete
+[███████░░░] 67% complete 
+Phase 1: Foundation & Schema - 2/3 plans complete
   ✓ 01-01: Core Entity Schema
-  ○ 01-02: Junction Tables
+  ✓ 01-02: Junction Tables
   ○ 01-03: Multi-tenant Guards
 Phase 2: Core Entities - Not started
 Phase 3: Relationships & Querying - Not started
@@ -51,9 +51,10 @@ Phase 4: Scheduling - Not started
 | Phase | Plan | Duration | Tasks | Files | Completed |
 |-------|------|----------|-------|-------|-----------|
 | Phase 01-foundation-schema | P01 | 2min | 3 tasks | 2 files | 2026-03-03 |
+| Phase 01-foundation-schema | P02 | 2min | 3 tasks | 2 files | 2026-03-03 |
 
-**Velocity:** 1 plan in 2min (avg: 2min/plan)
-**Quality:** All verifications passed, 1 auto-fix (blocking - removed forward references)
+**Velocity:** 2 plans in 4min (avg: 2min/plan)
+**Quality:** All verifications passed, 1 auto-fix in P01 (blocking - removed forward references)
 **Blockers:** 0 active
 
 ## Accumulated Context
@@ -69,6 +70,9 @@ Phase 4: Scheduling - Not started
 | Used organizationId (not companyId) to match existing Appointment/ServiceDuration models | 2026-03-03 | Avoids breaking changes to existing schema, aligns with AccountId decorator | ✓ Confirmed |
 | Schedule intervals stored as JSON array instead of separate ScheduleInterval table | 2026-03-03 | Simpler queries, atomic updates, covers 95% use cases per research | ✓ Confirmed |
 | Applied onDelete: Cascade to Schedule foreign keys for automatic cleanup | 2026-03-03 | Prevents orphaned schedules, eliminates manual cleanup logic | ✓ Confirmed |
+| Place organizationId first in all composite indexes | 2026-03-03 | Multi-tenant apps always filter by tenant first. PostgreSQL can use index prefix for partial matches. 150× performance improvement vs single-column indexes | ✓ Confirmed |
+| Use bidirectional composite indexes (forward + reverse) | 2026-03-03 | Supports both "specialist's services" and "service's specialists" queries without full table scans. ~10-15% storage overhead but prevents N+1 queries | ✓ Confirmed |
+| Apply onDelete Cascade to junction table foreign keys | 2026-03-03 | Junction records have no independent value. Automatic cleanup when entities are deleted prevents orphaned records | ✓ Confirmed |
 
 ### Active TODOs
 
@@ -93,32 +97,34 @@ None at this time.
 ## Session Continuity
 
 ### What Just Happened
-- Executed Plan 01-01: Core Entity Schema
-- Added Service, Location, Specialist, and Schedule models to Prisma schema
-- Applied migration creating four database tables with indexes and foreign keys
-- Established organizationId tenant isolation pattern across all models
-- Configured cascade deletes on Schedule foreign keys
-- Used JSON for schedule intervals (flexible 1-5 time slots per day)
-- Auto-fixed: Removed forward references to junction tables (blocking - models don't exist yet)
-- All verifications passed, commits recorded
-- Created 01-01-SUMMARY.md documenting decisions and patterns
+- Executed Plan 01-02: Junction Tables
+- Added three junction tables to Prisma schema: SpecialistService, SpecialistLocation, ServiceLocation
+- Applied migration creating three junction tables with composite indexes and foreign keys
+- Established tenant-first indexing pattern (organizationId first in all composite indexes)
+- Configured cascade deletes on all junction table foreign keys for automatic cleanup
+- Added bidirectional indexes (forward + reverse) for optimal query performance
+- Applied unique constraints to prevent duplicate relationships within tenant
+- Generated Prisma Client with junction table types
+- All verifications passed, commits recorded (3 atomic task commits)
+- Created 01-02-SUMMARY.md documenting decisions and patterns
 - Updated STATE.md, ROADMAP.md, and REQUIREMENTS.md
-- Marked SCHEMA-01 and SCHEMA-02 requirements complete
+- Marked SCHEMA-03, SCHEMA-04, SCHEMA-05, SCHEMA-06, SCHEMA-07 requirements complete
 
 ### What's Next
-1. Execute Plan 02: Junction Tables (SpecialistService, SpecialistLocation, ServiceLocation)
-2. Execute Plan 03: Multi-tenant Guards and decorators
-3. Continue with Phase 2: Core Entities (repositories, DTOs, services)
+1. Execute Plan 03: Multi-tenant Guards and decorators (final plan in Phase 1)
+2. Continue with Phase 2: Core Entities (repositories, DTOs, services)
+3. Continue with Phase 3: Relationships & Querying
 
 ### Context for Next Agent
 - This is a **refactoring project** working within existing NestJS microservice at `/Users/muhemmedibrahimov/work/4f/4FRENDS-BACK/booking-appointment-service`
-- Core entity models (Service, Location, Specialist, Schedule) now exist in Prisma schema
-- Tenant isolation established via organizationId field (NOT companyId)
+- Core entity models (Service, Location, Specialist, Schedule) exist in Prisma schema with organizationId tenant isolation
+- Junction tables (SpecialistService, SpecialistLocation, ServiceLocation) now exist with composite indexes and cascade deletes
+- All schema work uses organizationId field (NOT companyId) to match existing models
 - Repository pattern already established (AppointmentRepository exists as template)
-- Next: Junction tables to enable many-to-many relationships
+- Next: Multi-tenant guards to enforce tenant isolation at application layer
 - Research identified critical pitfalls to avoid (cross-tenant leaks, N+1 queries, implicit-to-explicit migration)
 - Quick depth setting means aggressive compression (4 phases covers all 44 requirements)
 
 ---
 *State initialized: 2026-03-03*
-*Last execution: 2026-03-03 - Plan 01-01 complete*
+*Last execution: 2026-03-03 - Plan 01-02 complete*
