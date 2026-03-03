@@ -119,7 +119,9 @@ model Service {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  serviceDurations ServiceDuration[]
+  serviceDurations   ServiceDuration[]
+  specialistServices SpecialistService[] @relation(name: "specialistServices")
+  serviceLocations   ServiceLocation[]   @relation(name: "serviceLocations")
 
   @@index([organizationId])
   @@index([organizationId, parentServiceId])
@@ -135,7 +137,9 @@ model Location {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  schedules Schedule[]
+  schedules           Schedule[]           @relation(name: "locationSchedules")
+  specialistLocations SpecialistLocation[] @relation(name: "specialistLocations")
+  serviceLocations    ServiceLocation[]    @relation(name: "serviceLocations")
 
   @@index([organizationId])
   @@map("locations")
@@ -154,7 +158,9 @@ model Specialist {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  schedules Schedule[]
+  schedules           Schedule[]           @relation(name: "specialistSchedules")
+  specialistServices  SpecialistService[]  @relation(name: "specialistServices")
+  specialistLocations SpecialistLocation[] @relation(name: "specialistLocations")
 
   @@index([organizationId])
   @@index([organizationId, email])
@@ -173,8 +179,8 @@ model Schedule {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  specialist Specialist @relation(fields: [specialistId], references: [id], onDelete: Cascade)
-  location   Location   @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  specialist Specialist @relation(fields: [specialistId], references: [id], onDelete: Cascade, name: "specialistSchedules")
+  location   Location   @relation(fields: [locationId], references: [id], onDelete: Cascade, name: "locationSchedules")
 
   @@unique([organizationId, specialistId, locationId, dayOfWeek])
   @@index([organizationId, specialistId, locationId])
@@ -198,4 +204,45 @@ model ServiceDuration {
   @@index([serviceId])
   @@index([organizationId])
   @@map("service_durations")
+}
+
+// Junction Tables for Many-to-Many Relationships
+
+model SpecialistService {
+  id             String   @id @default(uuid())
+  organizationId String
+  specialistId   String
+  serviceId      String
+  createdAt      DateTime @default(now())
+
+  specialist Specialist @relation(fields: [specialistId], references: [id], onDelete: Cascade, name: "specialistServices")
+  service    Service    @relation(fields: [serviceId], references: [id], onDelete: Cascade, name: "specialistServices")
+
+  @@map("specialist_services")
+}
+
+model SpecialistLocation {
+  id             String   @id @default(uuid())
+  organizationId String
+  specialistId   String
+  locationId     String
+  createdAt      DateTime @default(now())
+
+  specialist Specialist @relation(fields: [specialistId], references: [id], onDelete: Cascade, name: "specialistLocations")
+  location   Location   @relation(fields: [locationId], references: [id], onDelete: Cascade, name: "specialistLocations")
+
+  @@map("specialist_locations")
+}
+
+model ServiceLocation {
+  id             String   @id @default(uuid())
+  organizationId String
+  serviceId      String
+  locationId     String
+  createdAt      DateTime @default(now())
+
+  service  Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade, name: "serviceLocations")
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade, name: "serviceLocations")
+
+  @@map("service_locations")
 }
