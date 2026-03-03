@@ -107,13 +107,61 @@ Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TBD | TBD | Pending |
+| SCHEMA-01 | Phase 1 | Pending |
+| SCHEMA-02 | Phase 1 | Pending |
+| SCHEMA-03 | Phase 1 | Pending |
+| SCHEMA-04 | Phase 1 | Pending |
+| SCHEMA-05 | Phase 1 | Pending |
+| SCHEMA-06 | Phase 1 | Pending |
+| SCHEMA-07 | Phase 1 | Pending |
+| TENANT-01 | Phase 1 | Pending |
+| TENANT-02 | Phase 1 | Pending |
+| TENANT-03 | Phase 1 | Pending |
+| TENANT-04 | Phase 1 | Pending |
+| SPEC-01 | Phase 2 | Pending |
+| SPEC-02 | Phase 2 | Pending |
+| SPEC-03 | Phase 2 | Pending |
+| SPEC-04 | Phase 2 | Pending |
+| SPEC-05 | Phase 2 | Pending |
+| SERV-01 | Phase 2 | Pending |
+| SERV-02 | Phase 2 | Pending |
+| LOC-01 | Phase 2 | Pending |
+| API-01 | Phase 2 | Pending |
+| API-04 | Phase 2 | Pending |
+| API-05 | Phase 2 | Pending |
+| REL-01 | Phase 3 | Pending |
+| REL-02 | Phase 3 | Pending |
+| REL-03 | Phase 3 | Pending |
+| REL-04 | Phase 3 | Pending |
+| REL-05 | Phase 3 | Pending |
+| REL-06 | Phase 3 | Pending |
+| REL-07 | Phase 3 | Pending |
+| QUERY-01 | Phase 3 | Pending |
+| QUERY-02 | Phase 3 | Pending |
+| QUERY-03 | Phase 3 | Pending |
+| QUERY-04 | Phase 3 | Pending |
+| QUERY-05 | Phase 3 | Pending |
+| QUERY-06 | Phase 3 | Pending |
+| API-02 | Phase 3 | Pending |
+| SCHED-01 | Phase 4 | Pending |
+| SCHED-02 | Phase 4 | Pending |
+| SCHED-03 | Phase 4 | Pending |
+| SCHED-04 | Phase 4 | Pending |
+| SCHED-05 | Phase 4 | Pending |
+| SCHED-06 | Phase 4 | Pending |
+| API-03 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 44 total
-- Mapped to phases: 0
-- Unmapped: 44 ⚠️
+- Mapped to phases: 44
+- Unmapped: 0 ✓
+
+**Phase Distribution:**
+- Phase 1 (Foundation & Schema): 11 requirements
+- Phase 2 (Core Entities): 11 requirements
+- Phase 3 (Relationships & Querying): 16 requirements
+- Phase 4 (Scheduling): 7 requirements
 
 ---
 *Requirements defined: 2026-03-03*
-*Last updated: 2026-03-03 after initial definition*
+*Last updated: 2026-03-03 after roadmap creation*
