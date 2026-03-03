@@ -135,8 +135,51 @@ model Location {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+  schedules Schedule[]
+
   @@index([organizationId])
   @@map("locations")
+}
+
+model Specialist {
+  id             String   @id @default(uuid())
+  organizationId String
+  avatar         String?
+  firstName      String
+  lastName       String
+  email          String
+  phone          String?
+  description    String?
+  isTopMaster    Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  schedules Schedule[]
+
+  @@index([organizationId])
+  @@index([organizationId, email])
+  @@index([organizationId, isTopMaster])
+  @@map("specialists")
+}
+
+model Schedule {
+  id             String   @id @default(uuid())
+  organizationId String
+  specialistId   String
+  locationId     String
+  dayOfWeek      Int
+  intervals      Json
+  isDayOff       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  specialist Specialist @relation(fields: [specialistId], references: [id], onDelete: Cascade)
+  location   Location   @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, specialistId, locationId, dayOfWeek])
+  @@index([organizationId, specialistId, locationId])
+  @@index([organizationId, locationId, dayOfWeek])
+  @@map("schedules")
 }
 
 model ServiceDuration {
