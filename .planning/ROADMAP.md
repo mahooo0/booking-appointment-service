@@ -51,7 +51,11 @@ Plans:
 4. User can create service without automatic location/specialist assignment (validates existing subservice tree compatibility)
 5. All entity operations validate organizationId ownership and return properly typed DTOs
 
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 02-01-PLAN.md -- Specialist CRUD module (repository, service, controller, DTOs, module registration)
+- [ ] 02-02-PLAN.md -- Service & Location management extensions (no auto-assignment, subservice validation)
 
 ---
 
