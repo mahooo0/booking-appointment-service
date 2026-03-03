@@ -22,11 +22,11 @@
 **Requirements**: SCHEMA-01, SCHEMA-02, SCHEMA-03, SCHEMA-04, SCHEMA-05, SCHEMA-06, SCHEMA-07, TENANT-01, TENANT-02, TENANT-03, TENANT-04
 
 **Success Criteria** (what must be TRUE):
-1. Specialist table exists with profile fields (avatar, firstName, lastName, email, phone, description, isTopMaster) and companyId
+1. Specialist table exists with profile fields (avatar, firstName, lastName, email, phone, description, isTopMaster) and organizationId
 2. Schedule table exists with specialist-location keys (specialistId, locationId, dayOfWeek, intervals JSON, isDayOff)
-3. All three junction tables exist (SpecialistService, SpecialistLocation, ServiceLocation) with companyId fields
-4. Composite indexes are created on [companyId, foreignKey1, foreignKey2] for all junction tables
-5. All queries automatically filter by companyId via repository pattern (no cross-tenant data leaks possible)
+3. All three junction tables exist (SpecialistService, SpecialistLocation, ServiceLocation) with organizationId fields
+4. Composite indexes are created on [organizationId, foreignKey1, foreignKey2] for all junction tables
+5. All queries automatically filter by organizationId via repository pattern (no cross-tenant data leaks possible)
 
 **Plans**: 3 plans
 
@@ -49,7 +49,7 @@ Plans:
 2. User can update specialist profile fields and delete specialist (with proper relationship cascade handling)
 3. User can list all specialists for their company with pagination and retrieve individual specialist details
 4. User can create service without automatic location/specialist assignment (validates existing subservice tree compatibility)
-5. All entity operations validate companyId ownership and return properly typed DTOs
+5. All entity operations validate organizationId ownership and return properly typed DTOs
 
 **Plans**: TBD
 
@@ -137,7 +137,7 @@ Linear dependency chain reflects architectural constraints:
 Research findings from `/Users/muhemmedibrahimov/work/4f/4FRENDS-BACK/booking-appointment-service/.planning/research/SUMMARY.md` informed phase structure:
 
 - **Explicit junction tables** (Phase 1): Prevents implicit-to-explicit migration data loss (Critical Pitfall #4)
-- **CompanyId on all junction tables** (Phase 1): Prevents cross-tenant data leaks (Critical Pitfall #1)
+- **organizationId on all junction tables** (Phase 1): Prevents cross-tenant data leaks (Critical Pitfall #1)
 - **Repository pattern** (Phase 2): Centralizes tenant filtering, already established in codebase
 - **relationLoadStrategy: 'join'** (Phase 3): Prevents N+1 query explosions (Critical Pitfall #3)
 - **Schedule as specialist-location entity** (Phase 4): Avoids single global schedule anti-pattern

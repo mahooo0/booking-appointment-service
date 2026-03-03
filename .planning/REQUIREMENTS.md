@@ -7,13 +7,13 @@
 
 ### Database Schema
 
-- [ ] **SCHEMA-01**: Create Specialist table with profile fields (id, companyId, avatar, firstName, lastName, email, phone, description, isTopMaster, timestamps)
-- [ ] **SCHEMA-02**: Create Schedule table with specialist+location keys (id, companyId, specialistId, locationId, dayOfWeek, intervals JSON, isDayOff, timestamps)
-- [ ] **SCHEMA-03**: Create SpecialistService junction table with companyId scoping (id, companyId, specialistId, serviceId, createdAt)
-- [ ] **SCHEMA-04**: Create SpecialistLocation junction table with companyId scoping (id, companyId, specialistId, locationId, createdAt)
-- [ ] **SCHEMA-05**: Create ServiceLocation junction table with companyId scoping (id, companyId, serviceId, locationId, createdAt)
-- [ ] **SCHEMA-06**: Add composite indexes on all junction tables: [companyId, foreignKey1, foreignKey2]
-- [ ] **SCHEMA-07**: Add unique constraints: @@unique([companyId, entityA, entityB]) on all junction tables
+- [ ] **SCHEMA-01**: Create Specialist table with profile fields (id, organizationId, avatar, firstName, lastName, email, phone, description, isTopMaster, timestamps)
+- [ ] **SCHEMA-02**: Create Schedule table with specialist+location keys (id, organizationId, specialistId, locationId, dayOfWeek, intervals JSON, isDayOff, timestamps)
+- [ ] **SCHEMA-03**: Create SpecialistService junction table with organizationId scoping (id, organizationId, specialistId, serviceId, createdAt)
+- [ ] **SCHEMA-04**: Create SpecialistLocation junction table with organizationId scoping (id, organizationId, specialistId, locationId, createdAt)
+- [ ] **SCHEMA-05**: Create ServiceLocation junction table with organizationId scoping (id, organizationId, serviceId, locationId, createdAt)
+- [ ] **SCHEMA-06**: Add composite indexes on all junction tables: [organizationId, foreignKey1, foreignKey2]
+- [ ] **SCHEMA-07**: Add unique constraints: @@unique([organizationId, entityA, entityB]) on all junction tables
 
 ### Specialist Management
 
@@ -62,9 +62,9 @@
 
 ### Multi-Tenant Safety
 
-- [ ] **TENANT-01**: All queries filter by companyId automatically (repository pattern)
-- [ ] **TENANT-02**: All mutations validate companyId ownership before operating
-- [ ] **TENANT-03**: Junction table records always include companyId
+- [ ] **TENANT-01**: All queries filter by organizationId automatically (repository pattern)
+- [ ] **TENANT-02**: All mutations validate organizationId ownership before operating
+- [ ] **TENANT-03**: Junction table records always include organizationId
 - [ ] **TENANT-04**: Prevent cross-tenant relationship creation (validation guards)
 
 ### API Layer
