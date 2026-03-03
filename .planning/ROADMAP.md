@@ -28,7 +28,12 @@
 4. Composite indexes are created on [companyId, foreignKey1, foreignKey2] for all junction tables
 5. All queries automatically filter by companyId via repository pattern (no cross-tenant data leaks possible)
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md - Core entity models (Service, Location, Specialist, Schedule)
+- [ ] 01-02-PLAN.md - Junction tables with indexes and constraints
+- [ ] 01-03-PLAN.md - Repository infrastructure and validation helpers
 
 ---
 
