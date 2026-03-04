@@ -89,7 +89,11 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1",
+      "^prisma/__generated__$": "<rootDir>/../prisma/__generated__"
+    }
   },
   "husky": {
     "hooks": {
