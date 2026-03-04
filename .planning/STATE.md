@@ -2,19 +2,21 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-last_updated: "2026-03-03T13:39:44.176Z"
+current_plan: 2/2
+status: executing
+last_updated: "2026-03-04T11:04:54.206Z"
 progress:
-  total_phases: 1
-  completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_phases: 2
+  completed_phases: 2
+  total_plans: 5
+  completed_plans: 5
+  percent: 100
 ---
 
 # Project State: Booking Appointment Service
 
-**Last Updated:** 2026-03-03
-**Status:** Milestone complete
+**Last Updated:** 2026-03-04
+**Status:** In progress
 
 ## Project Reference
 
@@ -24,23 +26,25 @@ progress:
 A NestJS microservice for managing booking appointments with flexible many-to-many relationships between Specialists (workers), Services (with subservices), Locations (company points), and Schedules. All relationships are explicit and optional—no rigid chains, no automatic bindings.
 
 **Current Focus:**
-Phase 1 (Foundation & Schema) - COMPLETE. Core entity models, junction tables, and multi-tenant repository infrastructure established.
+Phase 2 (Core Entities) - IN PROGRESS. Service and Location validation complete. Working on core entity repositories, DTOs, services, and controllers.
 
 ## Current Position
 
-**Active Phase:** 01-foundation-schema (COMPLETE)
-**Active Plan:** N/A (Phase 1 finished)
-**Last Completed:** 01-foundation-schema/01-03-PLAN.md
-**Next Action:** Begin Phase 2: Core Entities (repositories, DTOs, services)
+**Active Phase:** 02-core-entities (IN PROGRESS)
+**Active Plan:** 02-core-entities/02-01-PLAN.md (COMPLETE)
+**Current Plan:** 1/2
+**Last Completed:** 02-core-entities/02-01-PLAN.md
+**Next Action:** Execute Plan 02-02: Service and Location modules
 
 **Progress:**
-```
-[██████████] 100% complete
+[██████████] 100%
+[████████░░] 80% complete
 Phase 1: Foundation & Schema - 3/3 plans complete ✓ COMPLETE
   ✓ 01-01: Core Entity Schema
   ✓ 01-02: Junction Tables
   ✓ 01-03: Multi-tenant Repository Infrastructure
-Phase 2: Core Entities - Not started
+Phase 2: Core Entities - 1/2 plans complete (IN PROGRESS)
+  ✓ 02-01: Specialist CRUD Module
 Phase 3: Relationships & Querying - Not started
 Phase 4: Scheduling - Not started
 ```
@@ -52,9 +56,10 @@ Phase 4: Scheduling - Not started
 | Phase 01-foundation-schema | P01 | 2min | 3 tasks | 2 files | 2026-03-03 |
 | Phase 01-foundation-schema | P02 | 2min | 3 tasks | 2 files | 2026-03-03 |
 | Phase 01-foundation-schema | P03 | 2min | 3 tasks | 3 files | 2026-03-03 |
+| Phase 02-core-entities | P01 | 4min 58s | 2 tasks | 12 files | 2026-03-04 |
 
-**Velocity:** 3 plans in 6min (avg: 2min/plan)
-**Quality:** All verifications passed, 1 auto-fix in P01 (blocking - removed forward references)
+**Velocity:** 4 plans in 10min 58s (avg: 2min 44s/plan)
+**Quality:** All verifications passed, 1 auto-fix in Phase 1 P01 (blocking - removed forward references), 1 auto-fix in Phase 2 P01 (blocking - jest moduleNameMapper)
 **Blockers:** 0 active
 
 ## Accumulated Context
@@ -76,6 +81,9 @@ Phase 4: Scheduling - Not started
 | Explicit filtering over Prisma middleware for transparent, testable tenant isolation | 2026-03-03 | Clear in code what filtering is applied, testable, type-safe, debuggable vs hidden query modifications | ✓ Confirmed |
 | Abstract class pattern for BaseRepository to provide implementations and protected helpers | 2026-03-03 | Provides implementations not just contracts, child classes inherit tenant filtering logic automatically | ✓ Confirmed |
 | Parallel validation with Promise.all for 3x faster multi-entity checks | 2026-03-03 | 3 entities validated in ~50ms vs ~150ms sequential, all-or-nothing semantics | ✓ Confirmed |
+| Use PartialType from @nestjs/swagger for UpdateSpecialistDto | 2026-03-04 | Preserves Swagger metadata (lost with @nestjs/mapped-types). Auto-generated OpenAPI spec includes validation constraints | ✓ Confirmed |
+| Extract organizationId from @AccountId decorator instead of DTO field | 2026-03-04 | Prevents tenant ID spoofing - users cannot specify organizationId in request body. Security over convenience | ✓ Confirmed |
+| Fix jest moduleNameMapper for @/* path aliases | 2026-03-04 | Tests couldn't resolve imports, blocking TDD flow. Added moduleNameMapper to package.json jest config | ✓ Confirmed |
 
 ### Active TODOs
 
@@ -100,35 +108,44 @@ None at this time.
 ## Session Continuity
 
 ### What Just Happened
-- Executed Plan 01-03: Multi-Tenant Repository Infrastructure
-- Created BaseRepository abstract class with automatic tenant filtering (buildWhereWithTenant, validateEntityOwnership, findManyWithTenant)
-- Created cross-tenant validation helpers (validateSameTenantEntities, validateEntityOwnership)
-- Documented repository pattern with usage examples, anti-patterns, and testing recommendations
-- All verifications passed, commits recorded (3 atomic task commits)
-- Created 01-03-SUMMARY.md documenting infrastructure decisions
-- Updated STATE.md, ROADMAP.md, and REQUIREMENTS.md
-- Marked TENANT-01, TENANT-02, TENANT-03, TENANT-04 requirements complete
-- Phase 1 (Foundation & Schema) now COMPLETE - all 3 plans finished
+- Executed Plan 02-01: Specialist CRUD Module
+- Created PaginationDto for reusable pagination across all entities
+- Implemented Specialist DTOs with full validation and Swagger documentation
+- Created SpecialistRepository extending BaseRepository with tenant isolation
+- Implemented SpecialistService with business logic (create, findAll, findById, update, delete)
+- Created SpecialistController with 5 REST endpoints (@Permissions, @AccountId decorators)
+- Registered SpecialistModule in AppModule
+- Wrote unit tests for repository (9 tests, 100% coverage)
+- Fixed jest moduleNameMapper for @/* path aliases (blocking TDD flow)
+- All verifications passed, 2 task commits recorded (c7d2eae, 637f060)
+- Created 02-01-SUMMARY.md documenting implementation details
+- Updated STATE.md and ROADMAP.md
+- Marked SPEC-01, SPEC-02, SPEC-03, SPEC-04, SPEC-05, API-01, API-04, API-05 requirements complete
 
 ### What's Next
-1. Plan Phase 2: Core Entities (repositories, DTOs, services, controllers)
-2. Implement entity repositories extending BaseRepository
-3. Implement relationship services using validation helpers
+1. Execute Plan 02-02: Service and Location modules (similar pattern to Specialist)
+2. Implement Service and Location repositories, DTOs, services, controllers
+3. Complete Phase 2: Core Entities
 4. Continue with Phase 3: Relationships & Querying
 
 ### Context for Next Agent
 - This is a **refactoring project** working within existing NestJS microservice at `/Users/muhemmedibrahimov/work/4f/4FRENDS-BACK/booking-appointment-service`
 - **Phase 1 COMPLETE:** Core entity models, junction tables, and multi-tenant repository infrastructure established
+- **Phase 2 IN PROGRESS:** Plan 02-01 complete (Specialist CRUD Module)
 - Core entity models (Service, Location, Specialist, Schedule) exist in Prisma schema with organizationId tenant isolation
 - Junction tables (SpecialistService, SpecialistLocation, ServiceLocation) exist with composite indexes and cascade deletes
 - BaseRepository abstract class provides automatic tenant filtering via buildWhereWithTenant helper
 - Cross-tenant validation helpers prevent relationship creation across tenants (validateSameTenantEntities)
 - All schema work uses organizationId field (NOT companyId) to match existing models
-- Repository pattern documented with usage examples and anti-patterns
-- Next: Plan and execute Phase 2 (Core Entities) - implement repositories, DTOs, services, controllers
+- **Specialist module COMPLETE:** Full CRUD with repository, service, controller, DTOs, unit tests
+- PaginationDto created for reuse across all entities (skip/take with validation)
+- Repository pattern follows BaseRepository extension with tenant filtering
+- Controller pattern uses @AccountId() decorator for organizationId extraction, @Permissions for authorization
+- Jest configured with moduleNameMapper for @/* path aliases
+- Next: Execute Plan 02-02 (Service and Location modules) - follow Specialist pattern
 - Research identified critical pitfalls to avoid (cross-tenant leaks, N+1 queries, implicit-to-explicit migration)
 - Quick depth setting means aggressive compression (4 phases covers all 44 requirements)
 
 ---
 *State initialized: 2026-03-03*
-*Last execution: 2026-03-03 - Plan 01-03 complete (Phase 1 COMPLETE)*
+*Last execution: 2026-03-04 - Plan 02-01 complete (Phase 2 IN PROGRESS)*

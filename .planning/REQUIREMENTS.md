@@ -17,20 +17,20 @@
 
 ### Specialist Management
 
-- [ ] **SPEC-01**: Create specialist without assigning services or locations
-- [ ] **SPEC-02**: Update specialist profile (avatar, name, email, phone, description, isTopMaster)
-- [ ] **SPEC-03**: Delete specialist (with cascade handling for relationships)
-- [ ] **SPEC-04**: List all specialists for company with pagination
-- [ ] **SPEC-05**: Get specialist by ID with company scoping
+- [x] **SPEC-01**: Create specialist without assigning services or locations
+- [x] **SPEC-02**: Update specialist profile (avatar, name, email, phone, description, isTopMaster)
+- [x] **SPEC-03**: Delete specialist (with cascade handling for relationships)
+- [x] **SPEC-04**: List all specialists for company with pagination
+- [x] **SPEC-05**: Get specialist by ID with company scoping
 
 ### Service Management Extensions
 
-- [ ] **SERV-01**: Create service without automatic location/specialist assignment (modify existing logic if needed)
-- [ ] **SERV-02**: Verify subservice tree compatibility maintained (parentServiceId logic unchanged)
+- [x] **SERV-01**: Create service without automatic location/specialist assignment (modify existing logic if needed)
+- [x] **SERV-02**: Verify subservice tree compatibility maintained (parentServiceId logic unchanged)
 
 ### Location Management Extensions
 
-- [ ] **LOC-01**: Extend Location model to support specialist and service relationships (no breaking changes)
+- [x] **LOC-01**: Extend Location model to support specialist and service relationships (no breaking changes)
 
 ### Relationship Assignment
 
@@ -69,11 +69,11 @@
 
 ### API Layer
 
-- [ ] **API-01**: Specialists module with CRUD endpoints following existing patterns
+- [x] **API-01**: Specialists module with CRUD endpoints following existing patterns
 - [ ] **API-02**: Relationships module with assignment/unassignment endpoints
 - [ ] **API-03**: Schedule module with CRUD and bulk update endpoints
-- [ ] **API-04**: DTO validation for all inputs using class-validator
-- [ ] **API-05**: Response DTOs for all queries with proper typing
+- [x] **API-04**: DTO validation for all inputs using class-validator
+- [x] **API-05**: Response DTOs for all queries with proper typing
 
 ## v2 Requirements
 
@@ -118,17 +118,17 @@ Populated during roadmap creation.
 | TENANT-02 | Phase 1 | Complete |
 | TENANT-03 | Phase 1 | Complete |
 | TENANT-04 | Phase 1 | Complete |
-| SPEC-01 | Phase 2 | Pending |
-| SPEC-02 | Phase 2 | Pending |
-| SPEC-03 | Phase 2 | Pending |
-| SPEC-04 | Phase 2 | Pending |
-| SPEC-05 | Phase 2 | Pending |
-| SERV-01 | Phase 2 | Pending |
-| SERV-02 | Phase 2 | Pending |
-| LOC-01 | Phase 2 | Pending |
-| API-01 | Phase 2 | Pending |
-| API-04 | Phase 2 | Pending |
-| API-05 | Phase 2 | Pending |
+| SPEC-01 | Phase 2 | Complete |
+| SPEC-02 | Phase 2 | Complete |
+| SPEC-03 | Phase 2 | Complete |
+| SPEC-04 | Phase 2 | Complete |
+| SPEC-05 | Phase 2 | Complete |
+| SERV-01 | Phase 2 | Complete |
+| SERV-02 | Phase 2 | Complete |
+| LOC-01 | Phase 2 | Complete |
+| API-01 | Phase 2 | Complete |
+| API-04 | Phase 2 | Complete |
+| API-05 | Phase 2 | Complete |
 | REL-01 | Phase 3 | Pending |
 | REL-02 | Phase 3 | Pending |
 | REL-03 | Phase 3 | Pending |
