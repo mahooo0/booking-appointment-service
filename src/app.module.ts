@@ -13,6 +13,10 @@ import { PrismaModule } from './prisma/prisma.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 import { LogModule } from './log/log.module';
 import { LoggerMiddleware } from '@/log/middlewares/logger.middleware';
+import { AppointmentModule } from './appointment/appointment.module';
+import { ServiceDurationModule } from './service-duration/service-duration.module';
+import { EventsModule } from './events/events.module';
+import { SpecialistModule } from './specialist/specialist.module';
 
 @Module({
   imports: [
@@ -24,6 +28,10 @@ import { LoggerMiddleware } from '@/log/middlewares/logger.middleware';
     PrismaModule,
     RabbitmqModule,
     LogModule,
+    AppointmentModule,
+    ServiceDurationModule,
+    EventsModule,
+    SpecialistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -34,8 +42,5 @@ export class AppModule implements NestModule {
       .apply(LoggerMiddleware)
       .exclude({ path: '/health', method: RequestMethod.ALL })
       .forRoutes('*');
-    //.forRoutes(SomeController); // Застосовуємо лише до SomeController
-    // АБО
-    // .forRoutes({ path: 'api/*', method: RequestMethod.ALL }); // Застосовуємо до всіх маршрутів, що починаються з /api
   }
 }
