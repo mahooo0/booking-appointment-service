@@ -44,8 +44,8 @@ COPY --from=builder /app/dist ./dist
 # Copy Prisma schema (needed for migrations)
 COPY --from=builder /app/prisma/schema.prisma ./prisma/
 
-# Copy generated Prisma client
-COPY --from=builder /app/prisma/__generated__ ./prisma/__generated__
+# Copy generated Prisma client to the location expected by compiled code
+COPY --from=builder /app/prisma/__generated__ ./dist/prisma/__generated__
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs
