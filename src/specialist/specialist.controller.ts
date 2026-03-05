@@ -21,7 +21,7 @@ import { AccountId } from '@/common/decorators/account-id.decorator';
 import { Permissions } from '@/common/decorators/permission.decorator';
 
 @ApiTags('Specialists')
-@Controller('specialists')
+@Controller('appointments/specialists')
 export class SpecialistController {
   constructor(private readonly specialistService: SpecialistService) {}
 

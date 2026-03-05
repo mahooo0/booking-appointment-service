@@ -14,7 +14,7 @@ import { CreateServiceDurationDto } from './dto/create-service-duration.dto';
 import { UpdateServiceDurationDto } from './dto/update-service-duration.dto';
 
 @ApiTags('Service Durations')
-@Controller('service-durations')
+@Controller('appointments/service-durations')
 export class ServiceDurationController {
   constructor(
     private readonly serviceDurationService: ServiceDurationService,

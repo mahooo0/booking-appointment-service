@@ -23,7 +23,7 @@ import {
 } from './dto/appointment-response.dto';
 
 @ApiTags('Company Appointments')
-@Controller('company/appointments')
+@Controller('appointments/company')
 export class CompanyAppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}
 
