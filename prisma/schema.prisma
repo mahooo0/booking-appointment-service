@@ -115,16 +115,19 @@ model Service {
   name            String
   description     String?
   parentServiceId String?
+  typeId          String?
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
+  type               ServiceType?        @relation(fields: [typeId], references: [id])
   serviceDurations   ServiceDuration[]
   specialistServices SpecialistService[] @relation(name: "specialistServices")
   serviceLocations   ServiceLocation[]   @relation(name: "serviceLocations")
 
   @@index([organizationId])
   @@index([organizationId, parentServiceId])
+  @@index([typeId])
   @@map("services")
 }
 
@@ -290,6 +293,7 @@ model ServiceType {
   updatedAt         DateTime          @updatedAt
 
   category ServiceCategory @relation(fields: [categoryId], references: [id])
+  services Service[]
 
   @@unique([name, categoryId])
   @@index([categoryId])
