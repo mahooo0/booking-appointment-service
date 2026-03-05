@@ -1,0 +1,1911 @@
+{
+  "info": {
+    "name": "Booking Appointment Service — Full Flow",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url_org", "value": "http://localhost:3004" },
+    { "key": "base_url_services", "value": "http://localhost:3017" },
+    { "key": "base_url_appointments", "value": "http://localhost:3019" },
+    { "key": "admin_user_id", "value": "00000000-0000-0000-0000-000000000001" },
+    { "key": "admin_account_id", "value": "00000000-0000-0000-0000-000000000002" },
+    { "key": "company_user_id", "value": "00000000-0000-0000-0000-000000000003" },
+    { "key": "company_account_id", "value": "00000000-0000-0000-0000-000000000004" },
+    { "key": "client_user_id", "value": "00000000-0000-0000-0000-000000000005" },
+    { "key": "client_account_id", "value": "00000000-0000-0000-0000-000000000006" },
+    { "key": "client_phone", "value": "+380991234567" },
+    { "key": "organization_id", "value": "" },
+    { "key": "branch_id", "value": "" },
+    { "key": "service_category_id", "value": "" },
+    { "key": "service_type_id", "value": "" },
+    { "key": "service_id", "value": "" },
+    { "key": "service_variation_id", "value": "" },
+    { "key": "service_duration_id", "value": "" },
+    { "key": "appointment_id", "value": "" },
+    { "key": "verification_code", "value": "" },
+    { "key": "appointment_id_b", "value": "" },
+    { "key": "appointment_id_c", "value": "" },
+    { "key": "appointment_id_d", "value": "" },
+    { "key": "appointment_id_e", "value": "" },
+    { "key": "appointment_id_f", "value": "" },
+    { "key": "appointment_id_g", "value": "" },
+    { "key": "appointment_id_edge", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Setup — Organization & Branch",
+      "item": [
+        {
+          "name": "1. Create Organization",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"organization_id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{admin_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{admin_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-is-admin", "value": "true", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Грумінг-салон PetStyle\",\n  \"category\": \"GROOMING\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_org}}/organizations",
+              "host": ["{{base_url_org}}"],
+              "path": ["organizations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Create Branch (Address)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"branch_id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{admin_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{admin_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-is-admin", "value": "true", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"street\": \"Хрещатик\",\n  \"buildNumber\": \"1\",\n  \"city\": \"Київ\",\n  \"state\": \"Київська\",\n  \"address\": \"м. Київ, вул. Хрещатик 1\",\n  \"lat\": 50.45,\n  \"lon\": 30.52\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_org}}/organizations/{{organization_id}}/addresses",
+              "host": ["{{base_url_org}}"],
+              "path": ["organizations", "{{organization_id}}", "addresses"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Setup — Service Categories & Types",
+      "item": [
+        {
+          "name": "3. Create Service Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"service_category_id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{admin_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{admin_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-is-admin", "value": "true", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Грумінг\",\n  \"slug\": \"grooming\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_services}}/service-categories",
+              "host": ["{{base_url_services}}"],
+              "path": ["service-categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Create Service Type",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"service_type_id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{admin_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{admin_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-is-admin", "value": "true", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Стрижка\",\n  \"slug\": \"haircut\",\n  \"categoryId\": \"{{service_category_id}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_services}}/service-types",
+              "host": ["{{base_url_services}}"],
+              "path": ["service-types"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get Categories with Types",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{admin_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{admin_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-is-admin", "value": "true", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_services}}/service-categories/with-types",
+              "host": ["{{base_url_services}}"],
+              "path": ["service-categories", "with-types"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Company — Create Service",
+      "item": [
+        {
+          "name": "6. Create Service with Variations",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"service_id\", jsonData.id);",
+                  "if (jsonData.variations && jsonData.variations.length > 0) {",
+                  "  pm.collectionVariables.set(\"service_variation_id\", jsonData.variations[0].id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"services\":[\"create\",\"update\",\"delete\",\"manage\",\"view\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"organizationId\": \"{{organization_id}}\",\n  \"branchId\": \"{{branch_id}}\",\n  \"name\": \"Стрижка собак\",\n  \"typeId\": \"{{service_type_id}}\",\n  \"price\": 500,\n  \"variations\": [\n    { \"name\": \"Маленька порода\", \"price\": 400 },\n    { \"name\": \"Велика порода\", \"price\": 700 }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_services}}/services",
+              "host": ["{{base_url_services}}"],
+              "path": ["services"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Get Service by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_services}}/services/{{service_id}}",
+              "host": ["{{base_url_services}}"],
+              "path": ["services", "{{service_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Company — Set Service Duration",
+      "item": [
+        {
+          "name": "8. Create Service Duration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"service_duration_id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"services\":[\"manage\",\"view\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"{{service_id}}\",\n  \"organizationId\": \"{{organization_id}}\",\n  \"branchId\": \"{{branch_id}}\",\n  \"durationMinutes\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/service-durations",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["service-durations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Get Service Duration by Service ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"services\":[\"manage\",\"view\"]}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/service-durations/service/{{service_id}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["service-durations", "service", "{{service_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User — Browse & Find Service",
+      "item": [
+        {
+          "name": "10. Browse Categories with Types",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_services}}/service-categories/with-types",
+              "host": ["{{base_url_services}}"],
+              "path": ["service-categories", "with-types"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "11. List Services by Organization",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_services}}/services?organizationId={{organization_id}}",
+              "host": ["{{base_url_services}}"],
+              "path": ["services"],
+              "query": [
+                { "key": "organizationId", "value": "{{organization_id}}" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "12. Get Service Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_services}}/services/{{service_id}}",
+              "host": ["{{base_url_services}}"],
+              "path": ["services", "{{service_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "13. Get Service Duration",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/service-durations/service/{{service_id}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["service-durations", "service", "{{service_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User — Create Appointment (auto-sends OTP)",
+      "item": [
+        {
+          "name": "14. Create Appointment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"appointment_id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"{{service_id}}\",\n  \"serviceVariationId\": \"{{service_variation_id}}\",\n  \"branchId\": \"{{branch_id}}\",\n  \"organizationId\": \"{{organization_id}}\",\n  \"name\": \"Стрижка для Барсіка\",\n  \"date\": \"2025-07-15\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"11:00\",\n  \"phone\": \"{{client_phone}}\",\n  \"comment\": \"Маленький пудель\",\n  \"durationMinutes\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "15. Get Debug Verification Code",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"verification_code\", jsonData.code);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id}}/verify/debug",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id}}", "verify", "debug"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "16. Confirm Verification Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"{{verification_code}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id}}/verify/confirm",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id}}", "verify", "confirm"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "17. Verify Appointment is PENDING",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User — List & Filter Appointments",
+      "item": [
+        {
+          "name": "18. List All Appointments",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "19. Filter Appointments by Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments?status=PENDING",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments"],
+              "query": [
+                { "key": "status", "value": "PENDING" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "20. Filter Appointments by Date Range",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments?dateFrom=2025-07-01&dateTo=2025-07-31",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments"],
+              "query": [
+                { "key": "dateFrom", "value": "2025-07-01" },
+                { "key": "dateTo", "value": "2025-07-31" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Company — View Appointments",
+      "item": [
+        {
+          "name": "21. Company List Appointments by Branch",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments?branchId={{branch_id}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments"],
+              "query": [
+                { "key": "branchId", "value": "{{branch_id}}" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "22. Company Get Appointment Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Flow A — Happy Path: Accept → Completed",
+      "item": [
+        {
+          "name": "23. Accept Appointment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Чекаємо вас!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id}}/accept",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id}}", "accept"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "24. Verify CONFIRMED",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "25. Client Arrived",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Клієнт прийшов\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id}}/client-arrived",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id}}", "client-arrived"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "26. Verify COMPLETED",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Flow B — Decline",
+      "item": [
+        {
+          "name": "27. Create Appointment for Flow B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"appointment_id_b\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"{{service_id}}\",\n  \"serviceVariationId\": \"{{service_variation_id}}\",\n  \"branchId\": \"{{branch_id}}\",\n  \"organizationId\": \"{{organization_id}}\",\n  \"name\": \"Стрижка для Рекса\",\n  \"date\": \"2025-07-15\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"11:00\",\n  \"phone\": \"{{client_phone}}\",\n  \"comment\": \"Маленький пудель\",\n  \"durationMinutes\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "28. Get Debug Code for Flow B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"verification_code\", jsonData.code);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_b}}/verify/debug",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_b}}", "verify", "debug"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "29. Confirm Code for Flow B",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"{{verification_code}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_b}}/verify/confirm",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_b}}", "verify", "confirm"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "30. Decline Appointment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Немає вільного часу\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_b}}/decline",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_b}}", "decline"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "31. Verify DECLINED",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_b}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_b}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Flow C — Reschedule → Complete",
+      "item": [
+        {
+          "name": "32. Create Appointment for Flow C",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"appointment_id_c\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"{{service_id}}\",\n  \"serviceVariationId\": \"{{service_variation_id}}\",\n  \"branchId\": \"{{branch_id}}\",\n  \"organizationId\": \"{{organization_id}}\",\n  \"name\": \"Стрижка Flow C\",\n  \"date\": \"2025-07-15\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"11:00\",\n  \"phone\": \"{{client_phone}}\",\n  \"comment\": \"Маленький пудель\",\n  \"durationMinutes\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "33. Get Debug Code for Flow C",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"verification_code\", jsonData.code);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_c}}/verify/debug",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_c}}", "verify", "debug"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "34. Confirm Code for Flow C",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"{{verification_code}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_c}}/verify/confirm",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_c}}", "verify", "confirm"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "35. Reschedule Appointment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2025-07-20\",\n  \"startTime\": \"14:00\",\n  \"endTime\": \"15:00\",\n  \"comment\": \"Перенесено на 20-те\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_c}}/reschedule",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_c}}", "reschedule"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "36. Verify RESCHEDULED",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_c}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_c}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "37. Complete Rescheduled Appointment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Завершено після перенесення\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_c}}/complete",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_c}}", "complete"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Flow D — No-Show",
+      "item": [
+        {
+          "name": "38. Create Appointment for Flow D",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"appointment_id_d\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"{{service_id}}\",\n  \"serviceVariationId\": \"{{service_variation_id}}\",\n  \"branchId\": \"{{branch_id}}\",\n  \"organizationId\": \"{{organization_id}}\",\n  \"name\": \"Стрижка Flow D\",\n  \"date\": \"2025-07-15\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"11:00\",\n  \"phone\": \"{{client_phone}}\",\n  \"comment\": \"Маленький пудель\",\n  \"durationMinutes\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "39. Get Debug Code for Flow D",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"verification_code\", jsonData.code);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_d}}/verify/debug",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_d}}", "verify", "debug"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "40. Confirm Code for Flow D",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"{{verification_code}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_d}}/verify/confirm",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_d}}", "verify", "confirm"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "41. Accept Appointment for Flow D",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Чекаємо вас!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_d}}/accept",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_d}}", "accept"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "42. Mark No-Show",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Клієнт не з'явився\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_d}}/no-show",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_d}}", "no-show"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Flow E — User Cancels",
+      "item": [
+        {
+          "name": "43. Create Appointment for Flow E",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"appointment_id_e\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"{{service_id}}\",\n  \"serviceVariationId\": \"{{service_variation_id}}\",\n  \"branchId\": \"{{branch_id}}\",\n  \"organizationId\": \"{{organization_id}}\",\n  \"name\": \"Стрижка Flow E\",\n  \"date\": \"2025-07-15\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"11:00\",\n  \"phone\": \"{{client_phone}}\",\n  \"comment\": \"Маленький пудель\",\n  \"durationMinutes\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "44. Get Debug Code for Flow E",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"verification_code\", jsonData.code);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_e}}/verify/debug",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_e}}", "verify", "debug"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "45. Confirm Code for Flow E",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"{{verification_code}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_e}}/verify/confirm",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_e}}", "verify", "confirm"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "46. User Cancels Appointment",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Передумав\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_e}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_e}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Flow F — Company Cancels",
+      "item": [
+        {
+          "name": "47. Create Appointment for Flow F",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"appointment_id_f\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"{{service_id}}\",\n  \"serviceVariationId\": \"{{service_variation_id}}\",\n  \"branchId\": \"{{branch_id}}\",\n  \"organizationId\": \"{{organization_id}}\",\n  \"name\": \"Стрижка Flow F\",\n  \"date\": \"2025-07-15\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"11:00\",\n  \"phone\": \"{{client_phone}}\",\n  \"comment\": \"Маленький пудель\",\n  \"durationMinutes\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "48. Get Debug Code for Flow F",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"verification_code\", jsonData.code);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_f}}/verify/debug",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_f}}", "verify", "debug"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "49. Confirm Code for Flow F",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"{{verification_code}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_f}}/verify/confirm",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_f}}", "verify", "confirm"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "50. Company Cancels Appointment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Технічні проблеми\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_f}}/cancel",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_f}}", "cancel"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Flow G — Reschedule → Not Completed",
+      "item": [
+        {
+          "name": "51. Create Appointment for Flow G",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"appointment_id_g\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"{{service_id}}\",\n  \"serviceVariationId\": \"{{service_variation_id}}\",\n  \"branchId\": \"{{branch_id}}\",\n  \"organizationId\": \"{{organization_id}}\",\n  \"name\": \"Стрижка Flow G\",\n  \"date\": \"2025-07-15\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"11:00\",\n  \"phone\": \"{{client_phone}}\",\n  \"comment\": \"Маленький пудель\",\n  \"durationMinutes\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "52. Get Debug Code for Flow G",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"verification_code\", jsonData.code);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_g}}/verify/debug",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_g}}", "verify", "debug"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "53. Confirm Code for Flow G",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"{{verification_code}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_g}}/verify/confirm",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_g}}", "verify", "confirm"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "54. Reschedule Appointment for Flow G",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"date\": \"2025-07-25\",\n  \"startTime\": \"09:00\",\n  \"endTime\": \"10:00\",\n  \"comment\": \"Перенесено\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_g}}/reschedule",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_g}}", "reschedule"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "55. Mark Not Completed",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Не завершено\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_g}}/not-completed",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_g}}", "not-completed"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Verification Edge Cases",
+      "item": [
+        {
+          "name": "56. Create Appointment for Edge Case",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"appointment_id_edge\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"{{service_id}}\",\n  \"serviceVariationId\": \"{{service_variation_id}}\",\n  \"branchId\": \"{{branch_id}}\",\n  \"organizationId\": \"{{organization_id}}\",\n  \"name\": \"Edge Case Test\",\n  \"date\": \"2025-07-15\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"11:00\",\n  \"phone\": \"{{client_phone}}\",\n  \"comment\": \"Маленький пудель\",\n  \"durationMinutes\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "57. Get Debug Code for Edge Case",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"verification_code\", jsonData.code);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_edge}}/verify/debug",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_edge}}", "verify", "debug"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "58. Confirm with Wrong Code (expect 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"000000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_edge}}/verify/confirm",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_edge}}", "verify", "confirm"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "59. Resend Code (expect rate limit 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-user-id", "value": "{{client_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{client_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "USER", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/appointments/{{appointment_id_edge}}/verify/resend",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["appointments", "{{appointment_id_edge}}", "verify", "resend"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Status Transition Error Cases",
+      "item": [
+        {
+          "name": "60. Accept COMPLETED appointment (expect 400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Should fail\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id}}/accept",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id}}", "accept"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "61. Accept DECLINED appointment (expect 400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Should fail\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_b}}/accept",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_b}}", "accept"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "62. No-Show on PENDING_VERIFICATION (expect 400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"appointments\":[\"view\",\"manage\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Should fail\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/company/appointments/{{appointment_id_edge}}/no-show",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["company", "appointments", "{{appointment_id_edge}}", "no-show"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Service Duration CRUD",
+      "item": [
+        {
+          "name": "63. Update Service Duration",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" },
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"services\":[\"manage\",\"view\"]}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"durationMinutes\": 90\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url_appointments}}/service-durations/{{service_duration_id}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["service-durations", "{{service_duration_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "64. Get Service Durations by Organization",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"services\":[\"manage\",\"view\"]}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/service-durations/organization/{{organization_id}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["service-durations", "organization", "{{organization_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "65. Delete Service Duration",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "x-user-id", "value": "{{company_user_id}}", "type": "text" },
+              { "key": "x-account-id", "value": "{{company_account_id}}", "type": "text" },
+              { "key": "x-account-type", "value": "COMPANY", "type": "text" },
+              { "key": "x-permissions", "value": "{\"services\":[\"manage\",\"view\"]}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url_appointments}}/service-durations/{{service_duration_id}}",
+              "host": ["{{base_url_appointments}}"],
+              "path": ["service-durations", "{{service_duration_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
