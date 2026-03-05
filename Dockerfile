@@ -8,6 +8,7 @@ RUN npm install -g pnpm
 WORKDIR /app
 
 # Copy package files
+# Cache bust: 2026-03-05-v2
 COPY package.json pnpm-lock.yaml ./
 
 # Install all dependencies (including devDependencies for build)
