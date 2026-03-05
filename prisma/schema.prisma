@@ -258,3 +258,40 @@ model ServiceLocation {
   @@index([organizationId, serviceId])
   @@map("service_locations")
 }
+
+// Service Categories and Types
+
+enum ServiceTypeStatus {
+  ACTIVE
+  PENDING
+  REJECTED
+}
+
+model ServiceCategory {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  types ServiceType[]
+
+  @@map("service_categories")
+}
+
+model ServiceType {
+  id                String            @id @default(uuid())
+  name              String
+  slug              String            @unique
+  categoryId        String
+  status            ServiceTypeStatus @default(ACTIVE)
+  suggestedByUserId String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  category ServiceCategory @relation(fields: [categoryId], references: [id])
+
+  @@unique([name, categoryId])
+  @@index([categoryId])
+  @@map("service_types")
+}

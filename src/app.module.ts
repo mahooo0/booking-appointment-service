@@ -17,6 +17,8 @@ import { AppointmentModule } from './appointment/appointment.module';
 import { ServiceDurationModule } from './service-duration/service-duration.module';
 import { EventsModule } from './events/events.module';
 import { SpecialistModule } from './specialist/specialist.module';
+import { ServiceTypesModule } from './service-types/service-types.module';
+import { ServiceCategoriesModule } from './service-categories/service-categories.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { SpecialistModule } from './specialist/specialist.module';
     ServiceDurationModule,
     EventsModule,
     SpecialistModule,
+    ServiceTypesModule,
+    ServiceCategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
