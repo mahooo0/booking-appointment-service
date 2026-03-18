@@ -19,6 +19,7 @@ import { EventsModule } from './events/events.module';
 import { SpecialistModule } from './specialist/specialist.module';
 import { ServiceTypesModule } from './service-types/service-types.module';
 import { ServiceCategoriesModule } from './service-categories/service-categories.module';
+import { ReminderModule } from './reminder/reminder.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ServiceCategoriesModule } from './service-categories/service-categories
     SpecialistModule,
     ServiceTypesModule,
     ServiceCategoriesModule,
+    ReminderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

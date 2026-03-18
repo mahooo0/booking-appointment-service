@@ -17,6 +17,7 @@ export class AppointmentMapper {
       branchId: appointment.branchId,
       organizationId: appointment.organizationId,
       name: appointment.name,
+      clientPhone: appointment.clientPhone ?? undefined,
       date: appointment.date,
       startTime: appointment.startTime,
       endTime: appointment.endTime,

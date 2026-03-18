@@ -35,6 +35,7 @@ model Appointment {
   organizationId     String
 
   name            String
+  clientPhone     String?
   date            DateTime          @db.Date
   startTime       DateTime          @db.Time()
   endTime         DateTime          @db.Time()
@@ -298,4 +299,37 @@ model ServiceType {
   @@unique([name, categoryId])
   @@index([categoryId])
   @@map("service_types")
+}
+
+// ─── Reminders ──────────────────────────────────────────
+
+enum ReminderRepeat {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+model Reminder {
+  id          String         @id @default(uuid())
+  userId      String
+  title       String
+  date        DateTime       @db.Date
+  time        DateTime?      @db.Time()
+  comment     String?
+  repeat      ReminderRepeat @default(NONE)
+  isFavorite  Boolean        @default(false)
+  isCompleted Boolean        @default(false)
+  completedAt DateTime?
+
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, date])
+  @@index([userId, isFavorite])
+  @@index([userId, isCompleted])
+  @@map("reminders")
 }

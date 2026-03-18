@@ -47,6 +47,7 @@ export class AppointmentService {
       branchId: dto.branchId,
       organizationId: dto.organizationId,
       name: dto.name,
+      clientPhone: dto.phone,
       date: new Date(dto.date),
       startTime: this.parseTime(dto.startTime),
       endTime: this.parseTime(dto.endTime),

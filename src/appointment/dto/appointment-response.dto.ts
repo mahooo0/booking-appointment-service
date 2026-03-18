@@ -26,6 +26,9 @@ export class AppointmentResponseDto {
   @ApiProperty()
   name: string;
 
+  @ApiPropertyOptional()
+  clientPhone?: string;
+
   @ApiProperty()
   date: Date;
 
