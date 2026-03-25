@@ -8,8 +8,8 @@ export class AppointmentResponseDto {
   @ApiProperty()
   appointmentNumber: string;
 
-  @ApiProperty()
-  userId: string;
+  @ApiPropertyOptional()
+  userId?: string;
 
   @ApiProperty()
   serviceId: string;

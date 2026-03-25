@@ -14,6 +14,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { AppointmentService } from './appointment.service';
 import { PrismaService } from '@/prisma/prisma.service';
 import { UserId } from '@/common/decorators/user-id.decorator';
+import { OptionalUserId } from '@/common/decorators/optional-user-id.decorator';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import {
   RequestVerificationDto,
@@ -35,10 +36,10 @@ export class AppointmentController {
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new appointment' })
+  @ApiOperation({ summary: 'Create a new appointment (guests allowed)' })
   @ApiResponse({ status: 201, type: AppointmentResponseDto })
   async create(
-    @UserId() userId: string,
+    @OptionalUserId() userId: string | null,
     @Body() dto: CreateAppointmentDto,
   ): Promise<AppointmentResponseDto> {
     return this.appointmentService.create(userId, dto);
@@ -50,7 +51,7 @@ export class AppointmentController {
   @ApiParam({ name: 'id', description: 'Appointment ID' })
   async requestVerification(
     @Param('id') id: string,
-    @UserId() userId: string,
+    @OptionalUserId() userId: string | null,
     @Body() dto: RequestVerificationDto,
   ) {
     return this.appointmentService.requestVerification(id, dto.phone, userId);
@@ -62,7 +63,7 @@ export class AppointmentController {
   @ApiParam({ name: 'id', description: 'Appointment ID' })
   async resendVerification(
     @Param('id') id: string,
-    @UserId() userId: string,
+    @OptionalUserId() userId: string | null,
   ) {
     return this.appointmentService.resendVerification(id, userId);
   }
@@ -74,7 +75,7 @@ export class AppointmentController {
   @ApiResponse({ status: 200, type: AppointmentResponseDto })
   async confirmVerification(
     @Param('id') id: string,
-    @UserId() userId: string,
+    @OptionalUserId() userId: string | null,
     @Body() dto: ConfirmVerificationDto,
   ): Promise<AppointmentResponseDto> {
     return this.appointmentService.confirmVerification(id, dto.code, userId);

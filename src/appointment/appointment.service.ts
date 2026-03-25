@@ -34,14 +34,14 @@ export class AppointmentService {
   // ─── User Actions ───────────────────────────────────────────
 
   async create(
-    userId: string,
+    userId: string | null,
     dto: CreateAppointmentDto,
   ): Promise<AppointmentResponseDto> {
     const appointmentNumber = await this.numberService.generateUniqueNumber();
 
     const appointment = await this.repository.create({
       appointmentNumber,
-      userId,
+      userId: userId ?? undefined,
       serviceId: dto.serviceId,
       serviceVariationId: dto.serviceVariationId,
       branchId: dto.branchId,
@@ -58,7 +58,7 @@ export class AppointmentService {
       statusHistory: {
         create: {
           toStatus: AppointmentStatus.PENDING_VERIFICATION,
-          changedBy: userId,
+          changedBy: userId ?? 'guest',
         },
       },
     });
@@ -80,7 +80,7 @@ export class AppointmentService {
     await this.events.publishCreated({
       appointmentId: appointment.id,
       appointmentNumber: appointment.appointmentNumber,
-      userId: appointment.userId,
+      userId: appointment.userId ?? undefined,
       serviceId: appointment.serviceId,
       serviceVariationId: appointment.serviceVariationId ?? undefined,
       branchId: appointment.branchId,
@@ -108,10 +108,12 @@ export class AppointmentService {
   async requestVerification(
     appointmentId: string,
     phone: string,
-    userId: string,
+    userId: string | null,
   ) {
     const appointment = await this.getAppointmentOrThrow(appointmentId);
-    this.ensureOwner(appointment.userId, userId);
+    if (appointment.userId) {
+      this.ensureOwner(appointment.userId, userId);
+    }
 
     if (appointment.status !== AppointmentStatus.PENDING_VERIFICATION) {
       throw new BadRequestException('Appointment is not pending verification');
@@ -131,9 +133,11 @@ export class AppointmentService {
     };
   }
 
-  async resendVerification(appointmentId: string, userId: string) {
+  async resendVerification(appointmentId: string, userId: string | null) {
     const appointment = await this.getAppointmentOrThrow(appointmentId);
-    this.ensureOwner(appointment.userId, userId);
+    if (appointment.userId) {
+      this.ensureOwner(appointment.userId, userId);
+    }
 
     if (appointment.status !== AppointmentStatus.PENDING_VERIFICATION) {
       throw new BadRequestException('Appointment is not pending verification');
@@ -157,10 +161,12 @@ export class AppointmentService {
   async confirmVerification(
     appointmentId: string,
     code: string,
-    userId: string,
+    userId: string | null,
   ): Promise<AppointmentResponseDto> {
     const appointment = await this.getAppointmentOrThrow(appointmentId);
-    this.ensureOwner(appointment.userId, userId);
+    if (appointment.userId) {
+      this.ensureOwner(appointment.userId, userId);
+    }
 
     if (appointment.status !== AppointmentStatus.PENDING_VERIFICATION) {
       throw new BadRequestException('Appointment is not pending verification');
@@ -172,7 +178,7 @@ export class AppointmentService {
       appointmentId,
       AppointmentStatus.PENDING,
       {},
-      userId,
+      userId ?? 'guest',
       'Verification confirmed',
     );
 
@@ -181,7 +187,7 @@ export class AppointmentService {
     await this.events.publishVerified({
       appointmentId: updated.id,
       appointmentNumber: updated.appointmentNumber,
-      userId: updated.userId,
+      userId: updated.userId ?? undefined,
       branchId: updated.branchId,
       organizationId: updated.organizationId,
       name: updated.name,
@@ -253,7 +259,7 @@ export class AppointmentService {
     await this.events.publishCancelled({
       appointmentId: updated.id,
       appointmentNumber: updated.appointmentNumber,
-      userId: updated.userId,
+      userId: updated.userId ?? undefined,
       branchId: updated.branchId,
       organizationId: updated.organizationId,
       cancelledBy: CancelledBy.CLIENT,
@@ -322,7 +328,7 @@ export class AppointmentService {
     await this.events.publishConfirmed({
       appointmentId: updated.id,
       appointmentNumber: updated.appointmentNumber,
-      userId: updated.userId,
+      userId: updated.userId ?? undefined,
       branchId: updated.branchId,
       organizationId: updated.organizationId,
       previousStatus: appointment.status,
@@ -359,7 +365,7 @@ export class AppointmentService {
     await this.events.publishDeclined({
       appointmentId: updated.id,
       appointmentNumber: updated.appointmentNumber,
-      userId: updated.userId,
+      userId: updated.userId ?? undefined,
       branchId: updated.branchId,
       organizationId: updated.organizationId,
       previousStatus: appointment.status,
@@ -400,7 +406,7 @@ export class AppointmentService {
     await this.events.publishRescheduled({
       appointmentId: updated.id,
       appointmentNumber: updated.appointmentNumber,
-      userId: updated.userId,
+      userId: updated.userId ?? undefined,
       branchId: updated.branchId,
       organizationId: updated.organizationId,
       newDate: dto.date,
@@ -438,7 +444,7 @@ export class AppointmentService {
     await this.events.publishCompleted({
       appointmentId: updated.id,
       appointmentNumber: updated.appointmentNumber,
-      userId: updated.userId,
+      userId: updated.userId ?? undefined,
       branchId: updated.branchId,
       organizationId: updated.organizationId,
       previousStatus: appointment.status,
@@ -474,7 +480,7 @@ export class AppointmentService {
     await this.events.publishNoShow({
       appointmentId: updated.id,
       appointmentNumber: updated.appointmentNumber,
-      userId: updated.userId,
+      userId: updated.userId ?? undefined,
       branchId: updated.branchId,
       organizationId: updated.organizationId,
       previousStatus: appointment.status,
@@ -511,7 +517,7 @@ export class AppointmentService {
     await this.events.publishCompleted({
       appointmentId: updated.id,
       appointmentNumber: updated.appointmentNumber,
-      userId: updated.userId,
+      userId: updated.userId ?? undefined,
       branchId: updated.branchId,
       organizationId: updated.organizationId,
       previousStatus: appointment.status,
@@ -574,7 +580,7 @@ export class AppointmentService {
     await this.events.publishCancelled({
       appointmentId: updated.id,
       appointmentNumber: updated.appointmentNumber,
-      userId: updated.userId,
+      userId: updated.userId ?? undefined,
       branchId: updated.branchId,
       organizationId: updated.organizationId,
       cancelledBy: CancelledBy.COMPANY,
@@ -594,7 +600,11 @@ export class AppointmentService {
     return appointment;
   }
 
-  private ensureOwner(appointmentUserId: string, requestUserId: string) {
+  private ensureOwner(
+    appointmentUserId: string | null,
+    requestUserId: string | null,
+  ) {
+    if (!appointmentUserId || !requestUserId) return;
     if (appointmentUserId !== requestUserId) {
       throw new BadRequestException('You do not own this appointment');
     }

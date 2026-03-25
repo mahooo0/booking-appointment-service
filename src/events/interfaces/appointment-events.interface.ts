@@ -3,7 +3,7 @@ import { AppointmentStatus, CancelledBy } from 'prisma/__generated__';
 export interface AppointmentCreatedEvent {
   appointmentId: string;
   appointmentNumber: string;
-  userId: string;
+  userId?: string;
   serviceId: string;
   serviceVariationId?: string;
   branchId: string;
@@ -21,7 +21,7 @@ export interface AppointmentCreatedEvent {
 export interface AppointmentVerifiedEvent {
   appointmentId: string;
   appointmentNumber: string;
-  userId: string;
+  userId?: string;
   branchId: string;
   organizationId: string;
   name: string;
@@ -33,7 +33,7 @@ export interface AppointmentVerifiedEvent {
 export interface AppointmentStatusChangedEvent {
   appointmentId: string;
   appointmentNumber: string;
-  userId: string;
+  userId?: string;
   branchId: string;
   organizationId: string;
   previousStatus: AppointmentStatus;
@@ -45,7 +45,7 @@ export interface AppointmentStatusChangedEvent {
 export interface AppointmentCancelledEvent {
   appointmentId: string;
   appointmentNumber: string;
-  userId: string;
+  userId?: string;
   branchId: string;
   organizationId: string;
   cancelledBy: CancelledBy;
@@ -55,7 +55,7 @@ export interface AppointmentCancelledEvent {
 export interface AppointmentRescheduledEvent {
   appointmentId: string;
   appointmentNumber: string;
-  userId: string;
+  userId?: string;
   branchId: string;
   organizationId: string;
   newDate: string;

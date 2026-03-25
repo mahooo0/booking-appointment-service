@@ -28,7 +28,7 @@ enum CancelledBy {
 model Appointment {
   id                 String  @id @default(uuid())
   appointmentNumber  String  @unique
-  userId             String
+  userId             String?
   serviceId          String
   serviceVariationId String?
   branchId           String
