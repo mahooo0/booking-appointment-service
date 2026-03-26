@@ -175,12 +175,10 @@ export class AppointmentEventsService {
   async sendVerificationSms(phone: string, code: string) {
     try {
       await this.rabbitmq.publishToQueue(this.notificationQueue, {
-        type: 'notification',
+        type: 'sms',
         title: 'Код підтвердження',
         message: `Ваш код підтвердження запису: ${code}`,
-        channels: ['SMS'],
         recipients: { phone },
-        priority: 'URGENT',
       });
       this.logger.log(`Verification SMS sent to ${phone}`);
     } catch (error) {
