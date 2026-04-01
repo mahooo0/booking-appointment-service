@@ -12,7 +12,7 @@ import { EventsModule } from '@/events/events.module';
 
 @Module({
   imports: [PrismaModule, EventsModule],
-  controllers: [AppointmentController, CompanyAppointmentController],
+  controllers: [CompanyAppointmentController, AppointmentController],
   providers: [
     AppointmentService,
     AppointmentRepository,
