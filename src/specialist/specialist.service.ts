@@ -6,11 +6,14 @@ import {
   SpecialistResponseDto,
   SpecialistListResponseDto,
 } from './dto/specialist-response.dto';
+import { StorageMessage } from '@/common/dto/storage-message.dto';
+import { LogService } from '@/log/log.service';
 
 @Injectable()
 export class SpecialistService {
   constructor(
-    private readonly specialistRepository: SpecialistRepository
+    private readonly specialistRepository: SpecialistRepository,
+    private readonly logger: LogService,
   ) {}
 
   async create(
@@ -81,5 +84,58 @@ export class SpecialistService {
 
   async delete(id: string, organizationId: string): Promise<void> {
     await this.specialistRepository.delete(id, organizationId);
+  }
+
+  async handleSpecialistImageUpdate(data: StorageMessage): Promise<void> {
+    try {
+      const specialist = await this.specialistRepository.findByIdWithoutTenant(
+        data.entityId,
+      );
+
+      if (!specialist) {
+        this.logger.warn(
+          `Specialist not found for image update: ${data.entityId}`,
+        );
+        return;
+      }
+
+      await this.specialistRepository.updateAvatar(
+        data.entityId,
+        data.publicUrl || null,
+      );
+
+      this.logger.log(
+        `Specialist ${data.entityId} avatar updated: ${data.publicUrl}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error updating specialist image for ${data.entityId}:`,
+        error,
+      );
+    }
+  }
+
+  async handleSpecialistImageDelete(data: StorageMessage): Promise<void> {
+    try {
+      const specialist = await this.specialistRepository.findByIdWithoutTenant(
+        data.entityId,
+      );
+
+      if (!specialist) {
+        this.logger.warn(
+          `Specialist not found for image delete: ${data.entityId}`,
+        );
+        return;
+      }
+
+      await this.specialistRepository.updateAvatar(data.entityId, null);
+
+      this.logger.log(`Specialist ${data.entityId} avatar cleared`);
+    } catch (error) {
+      this.logger.error(
+        `Error deleting specialist image for ${data.entityId}:`,
+        error,
+      );
+    }
   }
 }

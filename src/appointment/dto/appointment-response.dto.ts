@@ -17,6 +17,9 @@ export class AppointmentResponseDto {
   @ApiPropertyOptional()
   serviceVariationId?: string;
 
+  @ApiPropertyOptional()
+  specialistId?: string;
+
   @ApiProperty()
   branchId: string;
 

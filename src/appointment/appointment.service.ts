@@ -44,6 +44,7 @@ export class AppointmentService {
       userId: userId ?? undefined,
       serviceId: dto.serviceId,
       serviceVariationId: dto.serviceVariationId,
+      specialistId: dto.specialistId,
       branchId: dto.branchId,
       organizationId: dto.organizationId,
       name: dto.name,

@@ -31,6 +31,7 @@ model Appointment {
   userId             String?
   serviceId          String
   serviceVariationId String?
+  specialistId       String?
   branchId           String
   organizationId     String
 
@@ -71,6 +72,7 @@ model Appointment {
   @@index([branchId])
   @@index([organizationId])
   @@index([serviceId])
+  @@index([specialistId])
   @@index([status])
   @@index([date])
   @@map("appointments")

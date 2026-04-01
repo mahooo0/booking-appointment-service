@@ -19,6 +19,11 @@ export class CreateAppointmentDto {
   @IsOptional()
   serviceVariationId?: string;
 
+  @ApiPropertyOptional({ description: 'Specialist ID (optional)' })
+  @IsUUID()
+  @IsOptional()
+  specialistId?: string;
+
   @ApiProperty({ description: 'Branch ID' })
   @IsUUID()
   @IsNotEmpty()

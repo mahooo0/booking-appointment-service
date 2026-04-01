@@ -73,4 +73,17 @@ export class SpecialistRepository extends BaseRepository {
       where: { id },
     });
   }
+
+  async findByIdWithoutTenant(id: string) {
+    return this.prisma.specialist.findUnique({
+      where: { id },
+    });
+  }
+
+  async updateAvatar(id: string, avatar: string | null) {
+    return this.prisma.specialist.update({
+      where: { id },
+      data: { avatar },
+    });
+  }
 }

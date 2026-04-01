@@ -14,6 +14,7 @@ export class AppointmentMapper {
       userId: appointment.userId ?? undefined,
       serviceId: appointment.serviceId,
       serviceVariationId: appointment.serviceVariationId ?? undefined,
+      specialistId: appointment.specialistId ?? undefined,
       branchId: appointment.branchId,
       organizationId: appointment.organizationId,
       name: appointment.name,
