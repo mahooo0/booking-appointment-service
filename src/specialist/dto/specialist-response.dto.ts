@@ -1,4 +1,26 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+export class SpecialistServiceDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiPropertyOptional()
+  description?: string;
+}
+
+export class SpecialistLocationDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiPropertyOptional()
+  address?: string;
+}
 
 export class SpecialistResponseDto {
   @ApiProperty({
@@ -57,6 +79,18 @@ export class SpecialistResponseDto {
     example: false,
   })
   isTopMaster: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Services provided by the specialist',
+    type: [SpecialistServiceDto],
+  })
+  services?: SpecialistServiceDto[];
+
+  @ApiPropertyOptional({
+    description: 'Locations where the specialist works',
+    type: [SpecialistLocationDto],
+  })
+  locations?: SpecialistLocationDto[];
 
   @ApiProperty({
     description: 'Creation timestamp',

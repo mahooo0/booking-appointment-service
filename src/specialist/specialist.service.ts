@@ -65,7 +65,19 @@ export class SpecialistService {
       throw new NotFoundException(`Specialist with ID ${id} not found`);
     }
 
-    return specialist as SpecialistResponseDto;
+    return {
+      ...specialist,
+      services: specialist.specialistServices?.map((ss: any) => ({
+        id: ss.service.id,
+        name: ss.service.name,
+        description: ss.service.description,
+      })),
+      locations: specialist.specialistLocations?.map((sl: any) => ({
+        id: sl.location.id,
+        name: sl.location.name,
+        address: sl.location.address,
+      })),
+    } as SpecialistResponseDto;
   }
 
   async update(

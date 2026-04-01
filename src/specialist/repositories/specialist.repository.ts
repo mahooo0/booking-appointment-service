@@ -28,6 +28,14 @@ export class SpecialistRepository extends BaseRepository {
   async findById(id: string, organizationId: string) {
     return this.prisma.specialist.findFirst({
       where: this.buildWhereWithTenant({ id }, organizationId),
+      include: {
+        specialistServices: {
+          include: { service: true },
+        },
+        specialistLocations: {
+          include: { location: true },
+        },
+      },
     });
   }
 
