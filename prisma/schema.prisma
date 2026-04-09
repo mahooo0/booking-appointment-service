@@ -37,6 +37,13 @@ model Appointment {
 
   name            String
   clientPhone     String?
+
+  // Denormalized fields for enriched responses
+  serviceName          String?
+  specialistFirstName  String?
+  specialistLastName   String?
+  branchAddress        String?
+
   date            DateTime          @db.Date
   startTime       DateTime          @db.Time()
   endTime         DateTime          @db.Time()

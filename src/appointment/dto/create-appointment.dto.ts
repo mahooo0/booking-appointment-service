@@ -73,4 +73,24 @@ export class CreateAppointmentDto {
   @IsNumber()
   @IsOptional()
   durationMinutes?: number;
+
+  @ApiPropertyOptional({ description: 'Service name (for enriched responses)' })
+  @IsString()
+  @IsOptional()
+  serviceName?: string;
+
+  @ApiPropertyOptional({ description: 'Specialist first name (for enriched responses)' })
+  @IsString()
+  @IsOptional()
+  specialistFirstName?: string;
+
+  @ApiPropertyOptional({ description: 'Specialist last name (for enriched responses)' })
+  @IsString()
+  @IsOptional()
+  specialistLastName?: string;
+
+  @ApiPropertyOptional({ description: 'Branch address (for enriched responses)' })
+  @IsString()
+  @IsOptional()
+  branchAddress?: string;
 }

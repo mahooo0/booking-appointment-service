@@ -4,6 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { AppointmentStatus, CancelledBy } from 'prisma/__generated__';
+import { PrismaService } from '@/prisma/prisma.service';
 import { AppointmentRepository } from './repositories/appointment.repository';
 import { AppointmentMapper } from './mappers/appointment.mapper';
 import { AppointmentNumberService } from './services/appointment-number.service';
@@ -22,6 +23,7 @@ import {
 @Injectable()
 export class AppointmentService {
   constructor(
+    private readonly prisma: PrismaService,
     private readonly repository: AppointmentRepository,
     private readonly mapper: AppointmentMapper,
     private readonly numberService: AppointmentNumberService,
@@ -39,6 +41,9 @@ export class AppointmentService {
   ): Promise<AppointmentResponseDto> {
     const appointmentNumber = await this.numberService.generateUniqueNumber();
 
+    // Resolve enrichment data from local DB if not provided by client
+    const enrichment = await this.resolveEnrichment(dto);
+
     const appointment = await this.repository.create({
       appointmentNumber,
       userId: userId ?? undefined,
@@ -49,6 +54,10 @@ export class AppointmentService {
       organizationId: dto.organizationId,
       name: dto.name,
       clientPhone: dto.phone,
+      serviceName: enrichment.serviceName,
+      specialistFirstName: enrichment.specialistFirstName,
+      specialistLastName: enrichment.specialistLastName,
+      branchAddress: enrichment.branchAddress,
       date: new Date(dto.date),
       startTime: this.parseTime(dto.startTime),
       endTime: this.parseTime(dto.endTime),
@@ -280,8 +289,8 @@ export class AppointmentService {
 
     const where = this.repository.buildWhereClause(query);
 
-    // Exclude PENDING_VERIFICATION from company view
-    if (!query.status) {
+    // Exclude PENDING_VERIFICATION from company view by default
+    if (!query.status?.length) {
       where.status = { not: AppointmentStatus.PENDING_VERIFICATION };
     }
 
@@ -615,5 +624,68 @@ export class AppointmentService {
     const [hours, minutes] = time.split(':').map(Number);
     const date = new Date(1970, 0, 1, hours, minutes, 0, 0);
     return date;
+  }
+
+  private async resolveEnrichment(dto: CreateAppointmentDto): Promise<{
+    serviceName?: string;
+    specialistFirstName?: string;
+    specialistLastName?: string;
+    branchAddress?: string;
+  }> {
+    const result: {
+      serviceName?: string;
+      specialistFirstName?: string;
+      specialistLastName?: string;
+      branchAddress?: string;
+    } = {};
+
+    // Use DTO values if provided, otherwise resolve from local DB
+    if (dto.serviceName) {
+      result.serviceName = dto.serviceName;
+    } else {
+      try {
+        const service = await this.prisma.service.findUnique({
+          where: { id: dto.serviceId },
+          select: { name: true },
+        });
+        if (service) result.serviceName = service.name;
+      } catch {
+        // Non-critical, skip enrichment
+      }
+    }
+
+    if (dto.specialistFirstName) {
+      result.specialistFirstName = dto.specialistFirstName;
+      result.specialistLastName = dto.specialistLastName;
+    } else if (dto.specialistId) {
+      try {
+        const specialist = await this.prisma.specialist.findUnique({
+          where: { id: dto.specialistId },
+          select: { firstName: true, lastName: true },
+        });
+        if (specialist) {
+          result.specialistFirstName = specialist.firstName;
+          result.specialistLastName = specialist.lastName;
+        }
+      } catch {
+        // Non-critical, skip enrichment
+      }
+    }
+
+    if (dto.branchAddress) {
+      result.branchAddress = dto.branchAddress;
+    } else {
+      try {
+        const location = await this.prisma.location.findUnique({
+          where: { id: dto.branchId },
+          select: { address: true },
+        });
+        if (location?.address) result.branchAddress = location.address;
+      } catch {
+        // Non-critical, skip enrichment
+      }
+    }
+
+    return result;
   }
 }

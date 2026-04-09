@@ -114,7 +114,7 @@ export class AppointmentRepository {
 
   buildWhereClause(params: {
     userId?: string;
-    status?: AppointmentStatus;
+    status?: AppointmentStatus[];
     branchId?: string;
     organizationId?: string;
     serviceId?: string;
@@ -125,7 +125,7 @@ export class AppointmentRepository {
     const where: Prisma.AppointmentWhereInput = {};
 
     if (params.userId) where.userId = params.userId;
-    if (params.status) where.status = params.status;
+    if (params.status?.length) where.status = { in: params.status };
     if (params.branchId) where.branchId = params.branchId;
     if (params.organizationId) where.organizationId = params.organizationId;
     if (params.serviceId) where.serviceId = params.serviceId;

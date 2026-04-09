@@ -26,20 +26,32 @@ export class AppointmentResponseDto {
   @ApiProperty()
   organizationId: string;
 
+  @ApiPropertyOptional({ description: 'Service name' })
+  serviceName?: string;
+
+  @ApiPropertyOptional({ description: 'Specialist first name' })
+  specialistFirstName?: string;
+
+  @ApiPropertyOptional({ description: 'Specialist last name' })
+  specialistLastName?: string;
+
+  @ApiPropertyOptional({ description: 'Branch address' })
+  branchAddress?: string;
+
   @ApiProperty()
   name: string;
 
   @ApiPropertyOptional()
   clientPhone?: string;
 
-  @ApiProperty()
-  date: Date;
+  @ApiProperty({ description: 'Date (YYYY-MM-DD)', example: '2026-04-11' })
+  date: string;
 
-  @ApiProperty()
-  startTime: Date;
+  @ApiProperty({ description: 'Start time (HH:mm)', example: '14:00' })
+  startTime: string;
 
-  @ApiProperty()
-  endTime: Date;
+  @ApiProperty({ description: 'End time (HH:mm)', example: '15:00' })
+  endTime: string;
 
   @ApiPropertyOptional()
   comment?: string;
@@ -65,14 +77,14 @@ export class AppointmentResponseDto {
   @ApiPropertyOptional({ enum: CancelledBy })
   cancelledBy?: CancelledBy;
 
-  @ApiPropertyOptional()
-  rescheduledDate?: Date;
+  @ApiPropertyOptional({ description: 'Rescheduled date (YYYY-MM-DD)', example: '2026-04-12' })
+  rescheduledDate?: string;
 
-  @ApiPropertyOptional()
-  rescheduledStartTime?: Date;
+  @ApiPropertyOptional({ description: 'Rescheduled start time (HH:mm)', example: '14:00' })
+  rescheduledStartTime?: string;
 
-  @ApiPropertyOptional()
-  rescheduledEndTime?: Date;
+  @ApiPropertyOptional({ description: 'Rescheduled end time (HH:mm)', example: '15:00' })
+  rescheduledEndTime?: string;
 
   @ApiPropertyOptional()
   rescheduleComment?: string;

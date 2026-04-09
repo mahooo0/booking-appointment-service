@@ -1,5 +1,5 @@
 import { IsDateString, IsEnum, IsOptional, IsString, IsInt, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { AppointmentStatus } from 'prisma/__generated__';
 
@@ -18,10 +18,20 @@ export class AppointmentQueryDto {
   @IsOptional()
   limit?: number = 10;
 
-  @ApiPropertyOptional({ enum: AppointmentStatus, description: 'Filter by status' })
-  @IsEnum(AppointmentStatus)
+  @ApiPropertyOptional({
+    enum: AppointmentStatus,
+    isArray: true,
+    description: 'Filter by status (single value or array)',
+  })
+  @IsEnum(AppointmentStatus, { each: true })
   @IsOptional()
-  status?: AppointmentStatus;
+  @Transform(({ value }) => {
+    if (Array.isArray(value)) return value;
+    if (typeof value === 'string' && value.includes(',')) return value.split(',');
+    if (value) return [value];
+    return undefined;
+  })
+  status?: AppointmentStatus[];
 
   @ApiPropertyOptional({ description: 'Filter by branch ID' })
   @IsString()
