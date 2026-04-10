@@ -118,6 +118,7 @@ export class AppointmentRepository {
     branchId?: string;
     organizationId?: string;
     serviceId?: string;
+    specialistId?: string;
     dateFrom?: string;
     dateTo?: string;
     search?: string;
@@ -129,6 +130,7 @@ export class AppointmentRepository {
     if (params.branchId) where.branchId = params.branchId;
     if (params.organizationId) where.organizationId = params.organizationId;
     if (params.serviceId) where.serviceId = params.serviceId;
+    if (params.specialistId) where.specialistId = params.specialistId;
 
     if (params.dateFrom || params.dateTo) {
       where.date = {};

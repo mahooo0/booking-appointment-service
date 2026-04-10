@@ -21,6 +21,8 @@ import {
   ConfirmVerificationDto,
 } from './dto/verify-code.dto';
 import { AppointmentQueryDto } from './dto/appointment-query.dto';
+import { CalendarQueryDto } from './dto/calendar-query.dto';
+import { CalendarResponseDto } from './dto/calendar-response.dto';
 import { CancelAppointmentDto } from './dto/decline-appointment.dto';
 import {
   AppointmentResponseDto,
@@ -89,6 +91,16 @@ export class AppointmentController {
     @Query() query: AppointmentQueryDto,
   ): Promise<AppointmentListResponseDto> {
     return this.appointmentService.getUserAppointments(userId, query);
+  }
+
+  @Get('calendar')
+  @ApiOperation({ summary: 'User calendar (grouped by days)' })
+  @ApiResponse({ status: 200, type: CalendarResponseDto })
+  async calendar(
+    @UserId() userId: string,
+    @Query() query: CalendarQueryDto,
+  ): Promise<CalendarResponseDto> {
+    return this.appointmentService.getUserCalendar(userId, query);
   }
 
   @Get(':id/verify/debug')

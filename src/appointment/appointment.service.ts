@@ -19,6 +19,15 @@ import {
   AppointmentResponseDto,
   AppointmentListResponseDto,
 } from './dto/appointment-response.dto';
+import {
+  CalendarQueryDto,
+  CalendarView,
+} from './dto/calendar-query.dto';
+import {
+  CalendarResponseDto,
+  CalendarDayDto,
+  CalendarEventDto,
+} from './dto/calendar-response.dto';
 
 @Injectable()
 export class AppointmentService {
@@ -601,6 +610,236 @@ export class AppointmentService {
     });
 
     return this.mapper.toResponseDto(updated);
+  }
+
+  // ─── Calendar ──────────────────────────────────────────────
+
+  async getUserCalendar(
+    userId: string,
+    query: CalendarQueryDto,
+  ): Promise<CalendarResponseDto> {
+    const { dateFrom, dateTo } = this.calculateDateRange(query.view, query.date);
+
+    const where = this.repository.buildWhereClause({
+      userId,
+      status: query.status,
+    });
+
+    return this.buildCalendarResponse(where, query.view, dateFrom, dateTo);
+  }
+
+  async getCompanyCalendar(
+    query: CalendarQueryDto,
+  ): Promise<CalendarResponseDto> {
+    const { dateFrom, dateTo } = this.calculateDateRange(query.view, query.date);
+
+    const where = this.repository.buildWhereClause({
+      branchId: query.branchId,
+      specialistId: query.specialistId,
+      status: query.status,
+    });
+
+    // Exclude PENDING_VERIFICATION from company calendar by default
+    if (!query.status?.length) {
+      where.status = { not: AppointmentStatus.PENDING_VERIFICATION };
+    }
+
+    return this.buildCalendarResponse(where, query.view, dateFrom, dateTo);
+  }
+
+  private async buildCalendarResponse(
+    where: any,
+    view: CalendarView,
+    dateFrom: Date,
+    dateTo: Date,
+  ): Promise<CalendarResponseDto> {
+    const statusFilter = where.status;
+    delete where.status;
+
+    // Fetch appointments in range: original date OR rescheduled date
+    where.OR = [
+      {
+        date: { gte: dateFrom, lte: dateTo },
+        ...(statusFilter ? { status: statusFilter } : {}),
+      },
+      {
+        rescheduledDate: { gte: dateFrom, lte: dateTo },
+        status: AppointmentStatus.RESCHEDULED,
+      },
+    ];
+
+    const { data: appointments } = await this.repository.findMany({
+      where,
+      take: 1000,
+    });
+
+    const enriched = await this.enrichAppointments(appointments);
+
+    // Group by effective date
+    const dayMap = new Map<string, CalendarEventDto[]>();
+
+    for (const appt of enriched) {
+      const effectiveDate =
+        appt.status === AppointmentStatus.RESCHEDULED && appt.rescheduledDate
+          ? appt.rescheduledDate
+          : appt.date;
+
+      const dateStr = this.mapper.formatDatePublic(effectiveDate);
+      if (!dayMap.has(dateStr)) {
+        dayMap.set(dateStr, []);
+      }
+      dayMap.get(dateStr)!.push(this.toCalendarEvent(appt));
+    }
+
+    // Sort events within each day by startTime
+    for (const events of dayMap.values()) {
+      events.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    }
+
+    // Build all days in range
+    const days: CalendarDayDto[] = [];
+    const current = new Date(dateFrom);
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    while (current <= dateTo) {
+      const dateStr = this.formatDateUTC(current);
+      const events = dayMap.get(dateStr) ?? [];
+      days.push({
+        date: dateStr,
+        dayOfWeek: dayNames[current.getUTCDay()],
+        eventsCount: events.length,
+        events,
+      });
+      current.setUTCDate(current.getUTCDate() + 1);
+    }
+
+    const totalEvents = days.reduce((sum, d) => sum + d.eventsCount, 0);
+
+    return {
+      view,
+      dateFrom: this.formatDateUTC(dateFrom),
+      dateTo: this.formatDateUTC(dateTo),
+      totalEvents,
+      days,
+    };
+  }
+
+  private toCalendarEvent(appt: any): CalendarEventDto {
+    const effectiveDate =
+      appt.status === AppointmentStatus.RESCHEDULED && appt.rescheduledDate
+        ? appt.rescheduledDate
+        : appt.date;
+    const effectiveStart =
+      appt.status === AppointmentStatus.RESCHEDULED && appt.rescheduledStartTime
+        ? appt.rescheduledStartTime
+        : appt.startTime;
+    const effectiveEnd =
+      appt.status === AppointmentStatus.RESCHEDULED && appt.rescheduledEndTime
+        ? appt.rescheduledEndTime
+        : appt.endTime;
+
+    const event: CalendarEventDto = {
+      id: appt.id,
+      appointmentNumber: appt.appointmentNumber,
+      type: 'appointment',
+      status: appt.status,
+      date: this.mapper.formatDatePublic(effectiveDate),
+      startTime: this.mapper.formatTimePublic(effectiveStart),
+      endTime: this.mapper.formatTimePublic(effectiveEnd),
+      durationMinutes: appt.durationMinutes ?? undefined,
+      client: {
+        name: appt.name,
+        phone: appt.clientPhone ?? undefined,
+        userId: appt.userId ?? undefined,
+      },
+      comment: appt.comment ?? undefined,
+      confirmedAt: appt.confirmedAt ?? undefined,
+      createdAt: appt.createdAt,
+    };
+
+    if (appt._service) {
+      event.service = {
+        id: appt._service.id,
+        name: appt._service.name,
+        price: appt.price ? Number(appt.price) : undefined,
+      };
+    } else if (appt.serviceName) {
+      event.service = {
+        id: appt.serviceId,
+        name: appt.serviceName,
+        price: appt.price ? Number(appt.price) : undefined,
+      };
+    }
+
+    if (appt._specialist) {
+      event.specialist = {
+        id: appt._specialist.id,
+        firstName: appt._specialist.firstName,
+        lastName: appt._specialist.lastName,
+      };
+    } else if (appt.specialistFirstName) {
+      event.specialist = {
+        id: appt.specialistId,
+        firstName: appt.specialistFirstName,
+        lastName: appt.specialistLastName ?? '',
+      };
+    }
+
+    if (appt._branch) {
+      event.branch = {
+        id: appt._branch.id,
+        address: appt._branch.address ?? undefined,
+      };
+    } else if (appt.branchAddress) {
+      event.branch = {
+        id: appt.branchId,
+        address: appt.branchAddress,
+      };
+    }
+
+    event.organization = {
+      id: appt.organizationId,
+      name: undefined,
+    };
+
+    return event;
+  }
+
+  private calculateDateRange(
+    view: CalendarView,
+    dateStr: string,
+  ): { dateFrom: Date; dateTo: Date } {
+    const date = new Date(dateStr + 'T00:00:00.000Z');
+
+    switch (view) {
+      case CalendarView.DAY:
+        return { dateFrom: date, dateTo: date };
+
+      case CalendarView.WEEK: {
+        const day = date.getUTCDay();
+        // Monday = 1, Sunday = 0 → offset to Monday
+        const mondayOffset = day === 0 ? -6 : 1 - day;
+        const monday = new Date(date);
+        monday.setUTCDate(date.getUTCDate() + mondayOffset);
+        const sunday = new Date(monday);
+        sunday.setUTCDate(monday.getUTCDate() + 6);
+        return { dateFrom: monday, dateTo: sunday };
+      }
+
+      case CalendarView.MONTH: {
+        const firstDay = new Date(
+          Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1),
+        );
+        const lastDay = new Date(
+          Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0),
+        );
+        return { dateFrom: firstDay, dateTo: lastDay };
+      }
+    }
+  }
+
+  private formatDateUTC(date: Date): string {
+    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, '0')}-${String(date.getUTCDate()).padStart(2, '0')}`;
   }
 
   // ─── Helpers ────────────────────────────────────────────────

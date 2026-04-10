@@ -94,6 +94,14 @@ export class AppointmentMapper {
     return `${String(time.getUTCHours()).padStart(2, '0')}:${String(time.getUTCMinutes()).padStart(2, '0')}`;
   }
 
+  formatDatePublic(date: Date): string {
+    return this.formatDate(date);
+  }
+
+  formatTimePublic(time: Date): string {
+    return this.formatTime(time);
+  }
+
   toListResponseDto(
     appointments: Appointment[],
     total: number,

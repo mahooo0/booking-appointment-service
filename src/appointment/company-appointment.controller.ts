@@ -11,6 +11,8 @@ import { AppointmentService } from './appointment.service';
 import { Permissions } from '@/common/decorators/permission.decorator';
 import { AccountId } from '@/common/decorators/account-id.decorator';
 import { AppointmentQueryDto } from './dto/appointment-query.dto';
+import { CalendarQueryDto } from './dto/calendar-query.dto';
+import { CalendarResponseDto } from './dto/calendar-response.dto';
 import { RescheduleAppointmentDto } from './dto/reschedule-appointment.dto';
 import {
   DeclineAppointmentDto,
@@ -35,6 +37,16 @@ export class CompanyAppointmentController {
     @Query() query: AppointmentQueryDto,
   ): Promise<AppointmentListResponseDto> {
     return this.appointmentService.getCompanyAppointments(query);
+  }
+
+  @Get('calendar')
+  @Permissions(['appointments.view'], 'COMPANY')
+  @ApiOperation({ summary: 'Company calendar (grouped by days)' })
+  @ApiResponse({ status: 200, type: CalendarResponseDto })
+  async calendar(
+    @Query() query: CalendarQueryDto,
+  ): Promise<CalendarResponseDto> {
+    return this.appointmentService.getCompanyCalendar(query);
   }
 
   @Get(':id')
