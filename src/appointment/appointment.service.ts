@@ -229,7 +229,9 @@ export class AppointmentService {
       take: limit,
     });
 
-    return this.mapper.toListResponseDto(data, total, page, limit);
+    const enriched = await this.enrichAppointments(data);
+
+    return this.mapper.toEnrichedListResponseDto(enriched, total, page, limit);
   }
 
   async getAppointmentById(
@@ -238,7 +240,8 @@ export class AppointmentService {
   ): Promise<AppointmentResponseDto> {
     const appointment = await this.getAppointmentOrThrow(id);
     this.ensureOwner(appointment.userId, userId);
-    return this.mapper.toResponseDto(appointment);
+    const [enriched] = await this.enrichAppointments([appointment]);
+    return this.mapper.toEnrichedResponseDto(enriched);
   }
 
   async cancelByUser(
@@ -687,5 +690,47 @@ export class AppointmentService {
     }
 
     return result;
+  }
+
+  private async enrichAppointments(appointments: any[]): Promise<any[]> {
+    if (appointments.length === 0) return [];
+
+    const serviceIds = [...new Set(appointments.map((a) => a.serviceId).filter(Boolean))];
+    const specialistIds = [...new Set(appointments.map((a) => a.specialistId).filter(Boolean))];
+    const branchIds = [...new Set(appointments.map((a) => a.branchId).filter(Boolean))];
+
+    const [services, specialists, branches] = await Promise.all([
+      serviceIds.length > 0
+        ? this.prisma.service.findMany({
+            where: { id: { in: serviceIds } },
+            select: { id: true, name: true, description: true },
+          })
+        : [],
+      specialistIds.length > 0
+        ? this.prisma.specialist.findMany({
+            where: { id: { in: specialistIds } },
+            select: { id: true, firstName: true, lastName: true, avatar: true, phone: true },
+          })
+        : [],
+      branchIds.length > 0
+        ? this.prisma.location.findMany({
+            where: { id: { in: branchIds } },
+            select: { id: true, name: true, address: true },
+          })
+        : [],
+    ]);
+
+    const serviceMap = new Map(services.map((s) => [s.id, s]));
+    const specialistMap = new Map(specialists.map((s) => [s.id, s]));
+    const branchMap = new Map(branches.map((b) => [b.id, b]));
+
+    return appointments.map((appointment) => ({
+      ...appointment,
+      _service: serviceMap.get(appointment.serviceId) ?? null,
+      _specialist: appointment.specialistId
+        ? specialistMap.get(appointment.specialistId) ?? null
+        : null,
+      _branch: branchMap.get(appointment.branchId) ?? null,
+    }));
   }
 }

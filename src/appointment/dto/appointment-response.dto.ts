@@ -1,6 +1,45 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AppointmentStatus, CancelledBy } from 'prisma/__generated__';
 
+export class AppointmentServiceDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiPropertyOptional()
+  description?: string;
+}
+
+export class AppointmentSpecialistDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  firstName: string;
+
+  @ApiProperty()
+  lastName: string;
+
+  @ApiPropertyOptional()
+  avatar?: string;
+
+  @ApiPropertyOptional()
+  phone?: string;
+}
+
+export class AppointmentBranchDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiPropertyOptional()
+  address?: string;
+}
+
 export class AppointmentResponseDto {
   @ApiProperty()
   id: string;
@@ -25,6 +64,15 @@ export class AppointmentResponseDto {
 
   @ApiProperty()
   organizationId: string;
+
+  @ApiPropertyOptional({ description: 'Service details', type: AppointmentServiceDto })
+  service?: AppointmentServiceDto;
+
+  @ApiPropertyOptional({ description: 'Specialist details', type: AppointmentSpecialistDto })
+  specialist?: AppointmentSpecialistDto;
+
+  @ApiPropertyOptional({ description: 'Branch details', type: AppointmentBranchDto })
+  branch?: AppointmentBranchDto;
 
   @ApiPropertyOptional({ description: 'Service name' })
   serviceName?: string;
