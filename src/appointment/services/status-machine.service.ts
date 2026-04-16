@@ -16,6 +16,7 @@ const VALID_TRANSITIONS: Record<AppointmentStatus, AppointmentStatus[]> = {
   ],
   DECLINED: [],
   RESCHEDULED: [
+    AppointmentStatus.CONFIRMED,
     AppointmentStatus.COMPLETED,
     AppointmentStatus.NOT_COMPLETED,
     AppointmentStatus.CANCELLED,
