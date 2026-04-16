@@ -12,7 +12,7 @@ export class AppointmentMapper {
       id: appointment.id,
       appointmentNumber: appointment.appointmentNumber,
       userId: appointment.userId ?? undefined,
-      serviceId: appointment.serviceId,
+      serviceId: appointment.serviceId ?? undefined,
       serviceVariationId: appointment.serviceVariationId ?? undefined,
       specialistId: appointment.specialistId ?? undefined,
       branchId: appointment.branchId,

@@ -56,7 +56,7 @@ export class AppointmentService {
     const appointment = await this.repository.create({
       appointmentNumber,
       userId: userId ?? undefined,
-      serviceId: dto.serviceId,
+      serviceId: dto.serviceId ?? undefined,
       serviceVariationId: dto.serviceVariationId,
       specialistId: dto.specialistId,
       branchId: dto.branchId,
@@ -100,7 +100,7 @@ export class AppointmentService {
       appointmentId: appointment.id,
       appointmentNumber: appointment.appointmentNumber,
       userId: appointment.userId ?? undefined,
-      serviceId: appointment.serviceId,
+      serviceId: appointment.serviceId ?? undefined,
       serviceVariationId: appointment.serviceVariationId ?? undefined,
       branchId: appointment.branchId,
       organizationId: appointment.organizationId,
@@ -765,7 +765,7 @@ export class AppointmentService {
       };
     } else if (appt.serviceName) {
       event.service = {
-        id: appt.serviceId,
+        id: appt.serviceId ?? undefined,
         name: appt.serviceName,
         price: appt.price ? Number(appt.price) : undefined,
       };
@@ -884,7 +884,7 @@ export class AppointmentService {
     // Use DTO values if provided, otherwise resolve from local DB
     if (dto.serviceName) {
       result.serviceName = dto.serviceName;
-    } else {
+    } else if (dto.serviceId) {
       try {
         const service = await this.prisma.service.findUnique({
           where: { id: dto.serviceId },

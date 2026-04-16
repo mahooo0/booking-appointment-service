@@ -29,7 +29,7 @@ model Appointment {
   id                 String  @id @default(uuid())
   appointmentNumber  String  @unique
   userId             String?
-  serviceId          String
+  serviceId          String?
   serviceVariationId String?
   specialistId       String?
   branchId           String

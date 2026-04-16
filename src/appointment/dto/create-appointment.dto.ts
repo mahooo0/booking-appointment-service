@@ -5,14 +5,18 @@ import {
   IsString,
   IsUUID,
   IsNumber,
+  ValidateIf,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateAppointmentDto {
-  @ApiProperty({ description: 'Service ID' })
+  @ApiPropertyOptional({
+    description: 'Service ID (required if serviceName is not provided)',
+  })
+  @ValidateIf((o) => !o.serviceName)
   @IsUUID()
-  @IsNotEmpty()
-  serviceId: string;
+  @IsNotEmpty({ message: 'Either serviceId or serviceName must be provided' })
+  serviceId?: string;
 
   @ApiPropertyOptional({ description: 'Service variation ID' })
   @IsUUID()
@@ -74,9 +78,12 @@ export class CreateAppointmentDto {
   @IsOptional()
   durationMinutes?: number;
 
-  @ApiPropertyOptional({ description: 'Service name (for enriched responses)' })
+  @ApiPropertyOptional({
+    description: 'Service name (required if serviceId is not provided — free text for "Other" option)',
+  })
+  @ValidateIf((o) => !o.serviceId)
   @IsString()
-  @IsOptional()
+  @IsNotEmpty({ message: 'Either serviceId or serviceName must be provided' })
   serviceName?: string;
 
   @ApiPropertyOptional({ description: 'Specialist first name (for enriched responses)' })

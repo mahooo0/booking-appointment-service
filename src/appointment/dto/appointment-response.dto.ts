@@ -50,8 +50,8 @@ export class AppointmentResponseDto {
   @ApiPropertyOptional()
   userId?: string;
 
-  @ApiProperty()
-  serviceId: string;
+  @ApiPropertyOptional()
+  serviceId?: string;
 
   @ApiPropertyOptional()
   serviceVariationId?: string;
