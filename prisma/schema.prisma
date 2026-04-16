@@ -68,6 +68,8 @@ model Appointment {
   completedAt   DateTime?
   cancelledAt   DateTime?
 
+  hasCustomerReview Boolean @default(false) @map("has_customer_review")
+
   isDeleted Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

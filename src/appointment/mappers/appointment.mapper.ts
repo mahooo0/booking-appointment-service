@@ -44,6 +44,7 @@ export class AppointmentMapper {
         ? this.formatTime(appointment.rescheduledEndTime)
         : undefined,
       rescheduleComment: appointment.rescheduleComment ?? undefined,
+      hasCustomerReview: appointment.hasCustomerReview,
       confirmedAt: appointment.confirmedAt ?? undefined,
       declinedAt: appointment.declinedAt ?? undefined,
       rescheduledAt: appointment.rescheduledAt ?? undefined,

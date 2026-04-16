@@ -152,6 +152,9 @@ export class AppointmentResponseDto {
   @ApiPropertyOptional()
   cancelledAt?: Date;
 
+  @ApiProperty({ description: 'Whether the customer has left a review for this appointment' })
+  hasCustomerReview: boolean;
+
   @ApiProperty()
   createdAt: Date;
 
