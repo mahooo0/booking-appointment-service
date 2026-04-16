@@ -27,11 +27,10 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       exceptionFactory: (errors) => {
-        const messages = errors.map((e) => ({
-          field: e.property,
-          errors: Object.values(e.constraints ?? {}),
-        }));
-        return new BadRequestException({ message: 'Validation failed', details: messages });
+        const messages = errors.flatMap((e) =>
+          Object.values(e.constraints ?? {}).map((msg) => `${e.property}: ${msg}`),
+        );
+        return new BadRequestException(messages);
       },
     }),
   );
