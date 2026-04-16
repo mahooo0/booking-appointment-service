@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ConsulService } from './consul/consul.service';
 import { LogService } from '@/log/log.service';
 import { GlobalExceptionFilter } from '@/common/filters/exception.filter';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -26,6 +26,13 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       transform: true,
+      exceptionFactory: (errors) => {
+        const messages = errors.map((e) => ({
+          field: e.property,
+          errors: Object.values(e.constraints ?? {}),
+        }));
+        return new BadRequestException({ message: 'Validation failed', details: messages });
+      },
     }),
   );
 
