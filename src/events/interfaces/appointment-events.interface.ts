@@ -4,7 +4,7 @@ export interface AppointmentCreatedEvent {
   appointmentId: string;
   appointmentNumber: string;
   userId?: string;
-  serviceId: string;
+  serviceId?: string;
   serviceVariationId?: string;
   branchId: string;
   organizationId: string;

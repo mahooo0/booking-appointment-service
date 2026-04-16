@@ -959,9 +959,9 @@ export class AppointmentService {
         : [],
     ]);
 
-    const serviceMap = new Map(services.map((s) => [s.id, s]));
-    const specialistMap = new Map(specialists.map((s) => [s.id, s]));
-    const branchMap = new Map(branches.map((b) => [b.id, b]));
+    const serviceMap = new Map(services.map((s) => [s.id, s] as const));
+    const specialistMap = new Map(specialists.map((s) => [s.id, s] as const));
+    const branchMap = new Map(branches.map((b) => [b.id, b] as const));
 
     return appointments.map((appointment) => ({
       ...appointment,
