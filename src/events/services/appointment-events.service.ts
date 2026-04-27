@@ -40,6 +40,7 @@ export class AppointmentEventsService {
         startTime: event.startTime,
         endTime: event.endTime,
       },
+      organizationId: event.organizationId,
       branchId: event.branchId,
       channels: ['SMS', 'WEBSOCKET'],
       priority: 'HIGH',
@@ -59,6 +60,8 @@ export class AppointmentEventsService {
         appointmentNumber: event.appointmentNumber,
       },
       userId: event.userId,
+      organizationId: event.organizationId,
+      branchId: event.branchId,
       channels: ['WEBSOCKET'],
       priority: 'HIGH',
     });
@@ -77,6 +80,8 @@ export class AppointmentEventsService {
         reason: event.reason,
       },
       userId: event.userId,
+      organizationId: event.organizationId,
+      branchId: event.branchId,
       channels: ['WEBSOCKET'],
       priority: 'HIGH',
     });
@@ -98,6 +103,8 @@ export class AppointmentEventsService {
         comment: event.comment,
       },
       userId: event.userId,
+      organizationId: event.organizationId,
+      branchId: event.branchId,
       channels: ['WEBSOCKET'],
       priority: 'HIGH',
     });
@@ -125,6 +132,7 @@ export class AppointmentEventsService {
           appointmentNumber: event.appointmentNumber,
           cancelledBy: event.cancelledBy,
         },
+        organizationId: event.organizationId,
         branchId: event.branchId,
         channels: ['WEBSOCKET'],
         priority: 'MEDIUM',
@@ -141,6 +149,8 @@ export class AppointmentEventsService {
           cancelledBy: event.cancelledBy,
         },
         userId: event.userId,
+        organizationId: event.organizationId,
+        branchId: event.branchId,
         channels: ['WEBSOCKET'],
         priority: 'HIGH',
       });
